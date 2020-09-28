@@ -77,7 +77,7 @@ module.exports = ({ config }) => {
 
 ```js
 <template>
-  <div class="decoarator">
+  <div class="decorator">
     <slot name="story"></slot>
   </div>
 </template>
