@@ -3,7 +3,7 @@ title: "Nuxt + TypeScript + Vuetify モジュールに Storybook をいれる"
 emoji: "🤠"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["nuxtjs", "typescript", "vuetify"]
-published: false
+published: true
 ---
 
 ## 概要
