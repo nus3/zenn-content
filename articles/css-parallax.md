@@ -3,50 +3,51 @@ title: "CSSカスタムプロパティを使ってパララックスを実装す
 emoji: "📸"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["css"]
-published: false
+published: true
 ---
 
 ## Motivate
 
-次の記事に書いてあるパララックスの実装方法が面白かったので日本語でまとめることにしました
+次の記事で紹介されているパララックスの実装が面白かったので日本語でまとめることにしました
 https://css-tricks.com/parallax-powered-by-css-custom-properties/
 
 余談ですが、初めて海外の人にTwitterでDMを送りました
-この記事を書いてる[Jhey](https://twitter.com/jh3yy)さんに向けて次のようなやり取りをしたんですが(意訳です)
+この記事を書いてる[Jhey](https://twitter.com/jh3yy)さんに向けて次のようなやり取りをしたんですが
+(意訳)
 
-> 私: パララックスの記事おもろかったから日本語で記事書いてもええ？
+> ワイ: パララックスの記事おもろかったから日本語で記事書いてもええ？
 > Jhey: わざわざ聞いてくれてあんがとー! 全然ええで!!
 > Jhey: なんか手伝えることあったら言ってやー
 
 Jheyさんめっちゃいい人だった
 
-## Preview
+## Parallax
 
-カーソルの移動によって複数の要素(画像)がそれぞれ異なる動きをします
+カーソルを移動させると錨の周りにいる魚たちがそれぞれ違う動きをします
 
 ![今回実装したparallaxのgif](/images/css-parallax/parallax.gif)
 
 [実際に触ってみたい方はこちら](https://nus3.github.io/p-storybook/?path=/story/parallax-index--default)
-[ソースコード](https://github.com/nus3/p-storybook)
+[ソースコード](https://github.com/nus3/p-storybook/tree/main/src/components/Parallax)
 
 ## How to Parallax
 
-(今回作るものはHTML・CSS・WebAPI(JS)のみで実装できますが、好みでReactを使ってます)
+パララックスを実装する[^1]手順をざっくりとまとめると次になります
 
-パララックスを実装する方法をざっくりとまとめると次になります
+[^1]: 今回作るものはHTML・CSS・素のJSのみで実装できますが、好みでReactで実装しています
 
 1. [`pointermove`](https://developer.mozilla.org/ja/docs/Web/API/Document/pointermove_event)イベントからカーソルの座標(x, y)を取得する
-2. 対象のelementの中央値を計算する
-3. 対象のelementの中央からみて、X軸とY軸でどれくらい変化があったのか計算する
-4. 計算した値をCSSカスタムプロパティ格納する
-5. 各要素(画像)の初期位置や動作の変化量(縦、横、回転)を係数として設定する
+2. 対象elementの中心座標を取得する
+3. 対象elementの中心からみて、X軸とY軸のカーソルの変化量を計算する
+4. 計算した値を[CSSカスタムプロパティ](https://developer.mozilla.org/ja/docs/Web/CSS/--*)に格納する
+5. 各要素(魚)がどれくらい動くか(縦、横、回転)を係数として設定する
 6. カーソルの変化量と各要素の係数を使って`transform`や`rotate`する
 
 1つずつ詳細を見てきましょう
 
-### `pointermove`イベントからカーソルの座標を取得する
+### [`pointermove`](https://developer.mozilla.org/ja/docs/Web/API/Document/pointermove_event)イベントからカーソルの座標を取得する
 
-`pointermove`イベントをlistenすると、カーソルが動いた際のx軸とy軸の値を取得できます
+カーソルが動いた際のx軸とy軸の値を取得できます
 
 ```typescript
 window.addEventListener('pointermove', ({x, y}: PointerEvent) => {
@@ -54,9 +55,9 @@ window.addEventListener('pointermove', ({x, y}: PointerEvent) => {
 })
 ```
 
-### 対象のelementの中央値を計算する
+### 対象elementの中心座標を取得する
 
-elementの寸法と位置を返してくれる[`Element.getBoundingClientRect()`](https://developer.mozilla.org/ja/docs/Web/API/Element/getBoundingClientRect)を使い、対象elementの中央値を計算します
+elementのサイズと位置を返してくれる[`getBoundingClientRect()`](https://developer.mozilla.org/ja/docs/Web/API/Element/getBoundingClientRect)を使い、対象elementの中心を計算します
 
 ```typescript
 const elementBounds = element.getBoundingClientRect()
@@ -64,70 +65,57 @@ const centerX = elementBounds.left + elementBounds.width / 2
 const centerY = elementBounds.top + elementBounds.height / 2
 ```
 
-element中央値出したい時ってちょくちょくあるので、これは便利でヨキですね。
+elementの中心座標を出したい時ってちょくちょくあるので、これは便利でヨキですね。
 
-### 対象のelementの中央からみて、X軸とY軸でどれくらい変化があったのか計算する
+### 対象elementの中心からみて、X軸とY軸のカーソルの変化量を計算する
 
 [元記事](https://css-tricks.com/parallax-powered-by-css-custom-properties/)では、[GSAP](https://github.com/greensock/GSAP)というライブラリを使ってアニメーションに必要な計算をしています
 
-今回、対象のelementの中央からみて、X軸とY軸でどれくらい変化があったのかを計算するために[`gsap.utils.mapRange()`](https://greensock.com/docs/v3/GSAP/UtilityMethods/mapRange())を使っています
+今回、対象のelementの中心からみて、X軸とY軸でどれくらい変化があったのかを計算するために[`gsap.utils.mapRange()`](https://greensock.com/docs/v3/GSAP/UtilityMethods/mapRange())を使っています
 
-:::details mapRangeについて
+
+:::details mapRangeを使って中心からの変化量を計算する仕組み
+
+mapRangeについて
+
 - `gsap.utils.mapRange()`ではinputとoutputの範囲をそれぞれ決め、最後の引数で渡した値をその範囲の比率に応じてoutputの範囲の値で返してくれます
 - 例えば`gsap.utils.mapRange(0, 100, 0, 1000, 50)`の返り値は500になります
 - inputの範囲は`0 < x < 100`、outputの範囲は`0 < x < 1000`なので最後の引数で渡した値は10倍されて返ってきます
-:::
 
 
-次のコードでは、対象elementの中央からみたx,yの変化量をoutputで定義した範囲の値にしてcallback関数に渡しています
+次のコードでは、ビューポートの中心からみたxの変化量をcallback関数に渡しています
 
 ```typescript
 const bounds = 100
-const elementBounds = elementRef.current.getBoundingClientRect()
-const centerX = elementBounds.left + elementBounds.width / 2
-const centerY = elementBounds.top + elementBounds.height / 2
 
 // gsap.utils.mapRangeはinputとoutputの最大・最小の比率を出し、valueをその比率で計算する
 // mapRange(inMin: number, inMax: number, outMin: number, outMax: number, value: number)
 const boundX = gsap.utils.mapRange(
-  centerX - proximity, // inputの最小値
-  centerX + proximity, // inputの最大値
+  0,                   // inputの最小値
+  window.innerWidth,   // inputの最大値
   -bounds,             // outputの最小値
   bounds,              // outputの最大値
   x,                   // 実際の値(通常はinMinとinMaxの間)
 )
 
-const boundY = gsap.utils.mapRange(
-  centerY - proximity,
-  centerY + proximity,
-  -bounds,
-  bounds,
-  y,
-)
-
-callback(boundX / 100, boundY / 100)
+callback(boundX / 100)
 ```
 
-:::details proximityについて
-- 中央から見てどのくらいの座標まで変化させるか決める値
-- 例えばproximityの値が50であれば、中央から見て50px分しかParallaxは反応しない
-- 今回の実装ではwindowのwidthの半分の値にしている`window.innerWidth * 0.5`
+ポイントはinputの範囲が`0 < input < ウインドウ幅(window.innerWidth)`に対して、outputの範囲は`-100 < output < 100`になっている部分
+pointermoveイベントで取得できるx座標が中心に来たときに`boundX = 0`になり、カーソルが中心より左いる場合は`x < 0`、右にいる場合は`x > 0`になる
 :::
 
 
 また、[`gsap.utils.clamp()`](https://greensock.com/docs/v3/GSAP/UtilityMethods/clamp())を使って、x,yの変化量が一定の範囲を超えないようにしています
-
-:::details clampについて
 次のコードではxが-60よりも小さければ-60に、60よりも大きければ60になります
 
 ```ts
 `${Math.floor(gsap.utils.clamp(-60, 60, x))}`
 ```
-:::
 
 ### 計算した値をCSSカスタムプロパティ格納する
 
-[CSSカスタムプロパティ](https://developer.mozilla.org/ja/docs/Web/CSS/--*)を使う独自のプロパティを定義することができます
+[CSSカスタムプロパティ](https://developer.mozilla.org/ja/docs/Web/CSS/--*)を使うと独自のプロパティを定義することができます
 独自に定義したプロパティの値は[var関数](https://developer.mozilla.org/ja/docs/Web/CSS/var())使って呼び出せます
 
 ```css
@@ -157,7 +145,7 @@ const callback = (x: number, y: number) => {
 }
 ```
 
-### 各要素(画像)の初期位置や動作の変化量(縦、横、回転)を係数として設定する
+### 各要素(魚)がどれくらい動くか(縦、横、回転)を係数として設定する
 
 各要素の係数を次のような型として定義しました
 一部`Optional Properties`にしているものは`undefined`の場合は変化しないようにします
@@ -167,7 +155,7 @@ type Item = {
   key: string // ユニークな識別子(同じ画像を使いたい時に区別がつくように)
   name: string // 画像のファイル名
   config: {
-    positionX: number    // 要素の初期位置
+    positionX: number    // 魚の初期位置
     positionY: number
     positionZ?: number
     height?: number
@@ -204,7 +192,7 @@ export const ITEMS: Item[] = [
       width: 10,
     },
   },
-  // ....必要な要素を実際に動かしつつ、係数を調整するのじゃ！
+  // ....必要な要素を実際に動かしつつ、係数を調整するんじゃ！
 ]
 ```
 https://github.com/nus3/p-storybook/blob/main/src/components/ParallaxItem/item.ts
@@ -240,7 +228,7 @@ export const ParallaxItem: VFC<ParallaxItemProps> = ({ config, children }) => {
 }
 ```
 
-:::details React+TSの場合はカスタムプロパティ用にReact.CSSPropertiesは拡張する
+:::details React+TSの場合はカスタムプロパティ用にReact.CSSPropertiesを拡張した型を定義する
 
 ```tsx
 interface ItemCSS extends React.CSSProperties {
@@ -266,25 +254,11 @@ interface ItemCSS extends React.CSSProperties {
 
 各要素に当てるスタイルはCSSカスタムプロパティに格納した初期位置や係数からvar関数を使って定義します
 
-次のCSSでは`--range-x`と`--range-y`[^1]がカーソルの変化量、それ以外のカスタムプロパティは前の作業で設定した係数です
-translateで縦・横の移動を、rotateで要素の回転を制御しています
-
-[^1]: 自分が実装したコード見たら`--range-x`と`--range-y`は親コンポーネント側で定義してた・・・。親で定義したカスタムプロパティは子のコンポーネントでも呼び出せそうなので、実際に使う場合はスコープに注意したほうがよさそう
+次のCSSではrotateの値が`回転の係数(--r) * カーソルのx軸の変化量(--range-x) * 1deg`で算出される
 
 ```css
 .wrap {
   transform:
-    translate3d(
-      calc(((var(--mx, 0) * var(--range-x, 0)) * var(--motion-rate)) * 1%),
-      calc(((var(--my, 0) * var(--range-y, 0)) * var(--motion-rate)) * 1%),
-      calc(var(--z, 0) * 1vmin)
-    )
-    rotateX(
-      calc(((var(--rx, 0) * var(--range-y, 0)) * var(--motion-rate)) * 1deg)
-    )
-    rotateY(
-      calc(((var(--ry, 0) * var(--range-x, 0)) * var(--motion-rate)) * 1deg)
-    )
     rotate(
       calc(((var(--r, 0) * var(--range-x, 0)) * var(--motion-rate)) * 1deg)
     );
@@ -292,7 +266,10 @@ translateで縦・横の移動を、rotateで要素の回転を制御してい�
 ```
 
 
-:::details 各要素(画像)のスタイル全容
+:::details 各要素(魚)のスタイル全容
+
+魚の縦・横・z方向の動きをtranslate3dで、回転をrotateで定義している
+
 ```css
 .wrap {
   position: absolute;
@@ -320,14 +297,15 @@ translateで縦・横の移動を、rotateで要素の回転を制御してい�
 ```
 :::
 
-### ちなみに
+### この他にも
 
-元記事では、このほかにも良さげなテクニックが書かれていました
+元記事では良さげなテクニックが色々書かれていました
 
 - [CSSでのトレース方法](https://css-tricks.com/advice-for-complex-css-illustrations/#tracing-is-perfectly-acceptable)
 - 多くの画像を読み込まずに`background-position`や`background-size`を使って、一枚の画像から必要なパーツを切り出す
-- [`prefers-reduced-motion`](https://developer.mozilla.org/ja/docs/Web/CSS/@media/prefers-reduced-motion)がreduce時に対応するために`--motion-rate`いれといたよ
+- [`prefers-reduced-motion`](https://developer.mozilla.org/ja/docs/Web/CSS/@media/prefers-reduced-motion)がreduce時に対応するために`--motion-rate`いれたよ
 
+CSSでトレースするの面白そう
 
 ## Finally
 
@@ -340,8 +318,8 @@ https://adventar.org/calendars/6823
 
 ## Special thanks
 
-Jhey👏
+Jhey 👏
 https://twitter.com/jh3yy
 
-Icon Pack: Ocean | Lineal color
+Icon Pack: Ocean | Lineal color 🐠
 https://www.flaticon.com/packs/ocean-23
