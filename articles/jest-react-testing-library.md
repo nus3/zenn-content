@@ -3,7 +3,7 @@ title: "React + Testing Library + Jestの覚書"
 emoji: "🚨"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["react", "jest", "test"]
-published: false
+published: true
 ---
 
 最近、Zenn に全然(?)記事書けてないなぁっていうのと、フロントエンドのテスト大事やなぁと感じることが多かったので、React + Testing Library + Jest の覚書を雑に書くことにした
