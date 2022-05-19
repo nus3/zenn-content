@@ -186,3 +186,5 @@ test("should show login form", () => {
 - fireEvent は単純にイベントを dispatch するのに対して、user-event では実際にユーザーが操作したようなイベントを dispatch する
   - [https://ph-fritsche.github.io/blog/post/why-userevent](https://ph-fritsche.github.io/blog/post/why-userevent)
 - 特段、考慮することがなければ user-event を使った方が良さそう
+- `userEvent.keyboard()` で指定できる key 一覧
+  - https://github.com/testing-library/user-event/blob/main/src/keyboard/keyMap.ts
