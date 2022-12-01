@@ -6,6 +6,9 @@
 ## cli
 
 ```shell
-# 記事の追加
+# Add new article
 $ npx zenn new:article --slug 記事のスラッグ --title タイトル --type idea --emoji ✨
+
+# Preview
+$ npx zenn preview
 ```
