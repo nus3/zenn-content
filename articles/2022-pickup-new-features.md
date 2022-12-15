@@ -87,7 +87,7 @@ showBtn.addEventListener("click", () => {
 
 ## もう少しで主要ブラウザ全てで実装されそうな機能
 
-## 特定の要素のサイズに合わせてレスポンシブなスタイルが指定できる Container Queries
+### 特定の要素のサイズに合わせてレスポンシブなスタイルが指定できる Container Queries
 
 | Chrome | Edge | Firefox | Safari |
 | ------ | ---- | ------- | ------ |
@@ -118,7 +118,7 @@ Container Queries は要素に対してレスポンシブにスタイルを指�
 
 @[codepen](https://codepen.io/yota-hada/pen/MWXNePg)
 
-## セレクターで指定した条件に当てはまった場合にスタイルを指定できる `:has()`
+### セレクターで指定した条件に当てはまった場合にスタイルを指定できる `:has()`
 
 | Chrome | Edge | Firefox | Safari |
 | ------ | ---- | ------- | ------ |
