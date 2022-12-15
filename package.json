@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "zenn preview",
-    "new": "zenn new:article"
+    "new": "zenn new:article --slug"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "zenn-cli": "^0.1.133"
+    "zenn-cli": "^0.1.134"
   },
   "devDependencies": {
     "textlint": "^12.2.3",
