@@ -7,7 +7,7 @@ published: false
 publication_name: "cybozu_frontend"
 ---
 
-気付けば、もう年末ということで、今年に主要な Web ブラウザで実装された機能から個人的に気になったものをいくつか紹介します。
+気付けば、もう年末ということで、2022 年に主要な Web ブラウザで実装された機能から個人的に気になったものをいくつか紹介します。
 
 本記事は、11 月 26 日に行われた JSConf.jp のサイボウズのセッションの中で紹介した内容の詳細版になります。このセッションでは、フロントエンドエキスパートチームのメンバーが 2022 年の印象に残ったフロントエンドトピックについて話していますので、興味のある方は是非ご覧ください！
 
@@ -23,7 +23,7 @@ https://youtu.be/ccysINf4qTE?t=17514
 
 3 月にリリースされた[Firefox98](https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/98)と [Safari15.4](https://developer.apple.com/documentation/safari-release-notes/safari-15_4-release-notes)で実装されたことで、主要ブラウザ(Chrome, Edge, Firefox, Safari)で `<dialog>` が利用できるようになりました。
 
-`<dialog>` が利用できるようになり、これまでよりも簡単にモーダルなダイアログが実装できるようになりました。[`HTMLDialogElement.showModal()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/showModal)でダイアログ以外の要素にフォーカスがいかないモーダルなダイアログを呼び出せます。
+`<dialog>` が利用できるようになり、これまでよりも簡単にモーダルなダイアログが実装できるようになりました。[`HTMLDialogElement.showModal()`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/showModal)でダイアログ以外の要素にフォーカスが当たらないモーダルなダイアログを呼び出せます。
 
 ```javascript
 const dialog = document.getElementById("dialog");
