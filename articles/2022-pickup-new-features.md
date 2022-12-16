@@ -3,7 +3,7 @@ title: "2022年にWebブラウザに実装された気になる機能を実装�
 emoji: "🌊"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["html", "css", "javascript"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
