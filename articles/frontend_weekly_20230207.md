@@ -3,7 +3,7 @@ title: "Webアプリの主流がCSRからSSRに？など : Cybozu Frontend Weekl
 emoji: "🎸"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["CybozuFrontendWeekly", "frontend"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
@@ -33,7 +33,7 @@ Astro v2 で新しく追加された Hybrid Rendering の記事です。
 
 この Hybrid Rendering を利用することで画面ごとに SSG か SSR かを選択できるようになりました。この記事では、画面ごとのレンダリング方法の判別に、ビルド時の静的解析を用いたり、 `export const prerender = true` のように明示的な指定をできることが紹介されています。また、Hybrid Rendering のユースケースもいくつか紹介されているので、どの様な場合に利用できるか参考になりそうです。
 
-## React を使うならフレームワークを採用した方が良い
+## If you use React, you should be using a React framework
 
 https://twitter.com/acdlite/status/1617611126514266112?s=46&t=mjRBYqR2Pn6e94alL2aiRQ
 
