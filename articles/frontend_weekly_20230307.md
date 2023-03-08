@@ -1,6 +1,6 @@
 ---
 title: "Denoでpackage.jsonがサポートされたなど : Cybozu Frontend Weekly (2023-03-07号)"
-emoji: "🎸"
+emoji: "⛓️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["CybozuFrontendWeekly", "frontend"]
 published: false
