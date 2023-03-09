@@ -3,7 +3,7 @@ title: "Denoでpackage.jsonがサポートされたなど : Cybozu Frontend Week
 emoji: "⛓️"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["CybozuFrontendWeekly", "frontend"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
@@ -11,9 +11,9 @@ publication_name: "cybozu_frontend"
 
 # はじめに
 
-フロントエンドエキスパートチームでは毎週火曜日に Frontend Weekly という「1 週間の間にあったフロントエンドニュースを共有する会」を社内で開催しています。
+サイボウズでは毎週火曜日に Frontend Weekly という「1 週間の間にあったフロントエンドニュースを共有する会」を社内で開催しています。
 
-今回は、2023/03/07 の FrontendWeekly で取り上げた記事や話題を紹介します。
+今回は、2023/03/07 の Frontend Weekly で取り上げた記事や話題を紹介します。
 
 # 取り上げた記事・話題
 
@@ -39,7 +39,7 @@ https://twitter.com/nissy_dev/status/1631222211980955649
 
 弊社の[@nissy_dev](https://twitter.com/nissy_dev)が Rome のメンテナーになりました 🎉。
 
-Rome の活動の大半を締めていた Micha Reiser 氏が [Rome を離れる](https://twitter.com/MichaReiser/status/1613474278808162304?s=20)など、今後の動向が気になっていた Rome ですが、2 月ぐらいから OSS として活動が継続されているそうです。直近半年ぐらいは Linter や Formatter の開発を進めていく予定とのことです。
+Rome の活動の大半を締めていた Micha Reiser 氏が [Rome を離れる](https://twitter.com/MichaReiser/status/1613474278808162304?s=20)など、今後の動向が気になっていた Rome ですが、2 月ぐらいから OSS として活動が継続されているそうです。近いうちに[12.0.0 のリリース](https://github.com/rome/tools/pull/4002)を予定しているそうです。
 
 ## Connect for Node.js is now available
 
@@ -51,7 +51,7 @@ Connect for Node.js がベータ版としてリリースされました。この
 
 https://developer.chrome.com/blog/style-queries/
 
-親要素のスタイルに合わせて、子要素のスタイルを指定できる Style Queries が Chrome111 から試せるようになります。Chrome111 では、次のサンプルコードのようにカスタムプロパティを利用する場合のみ動くようです。
+コンテナ要素のスタイルに合わせて、子要素のスタイルを指定できる Style Queries が Chrome111 から試せるようになります。Chrome111 では、次のサンプルコードのようにカスタムプロパティを利用する場合のみ動くようです。
 
 ```css
 /* 親要素の--themeがwarmの場合に適応されるスタイル */
@@ -83,7 +83,7 @@ https://deno.com/blog/v1.31
 
 Deno の 1.31 で package.json がサポートされました。これにより、package.json に記載された依存をコードや `scripts` で利用できます。
 
-また、このほかに、指定した依存関係をバンドルする `deno bundle` が非推奨になりました。Deno がこれからも npm や Node.js の組み込みモジュールをサポートし続けることで、すでにある優れたバンドラーが利用できるので、Deno のランタイムからこの機能を削除ことを決めたそうです。
+また、このほかに、指定した依存関係をバンドルする `deno bundle` が非推奨になりました。Deno がこれからも npm や Node.js の組み込みモジュールをサポートし続けることで、すでにある優れたバンドラーが利用できるので、Deno のランタイムからこの機能を削除することを決めたそうです。
 
 ## Next.js 13.2
 
@@ -111,7 +111,7 @@ Vue1 から Vue2 と Vue2 から Vue3 では全く違うアプローチをとっ
 - 移行を成功させるためにはオンボーディングは不可欠
 - UI を変更しない Vue2 から Vue3 の移行には E2E や Testing Library が役立った
 
-ちなみに、Vue1 から Vue2 のフルリニューアルが完了するまで約 2 年ほどかかり、Vue2 から V3 への移行は約 8 ヶ月ほどかかったそうです。
+ちなみに、Vue1 から Vue2 のフルリニューアルが完了するまで約 2 年ほどかかり、Vue2 から Vue3 への移行は約 8 ヶ月ほどかかったそうです。
 
 # あとがき
 
@@ -119,7 +119,7 @@ TypeScript のみで gRPC ベースでのアプリケーションの実装が可
 
 ---
 
-フロントエンドエキスパートチームでは毎月、最終火曜日の 17 時から Frontend Monthly というイベントを Youtube Live で開催しています。その月のフロントエンド注目ニュースやゲストを呼んでの対談などフロントエンドに関する発信していますので是非どうぞ！
+フロントエンドエキスパートチームでは毎月、最終火曜日の 17 時から Frontend Monthly というイベントを YouTube Live で開催しています。その月のフロントエンド注目ニュースやゲストを呼んでの対談などフロントエンドに関する発信していますので是非どうぞ！
 
 https://cybozu.github.io/frontend-monthly/
 
