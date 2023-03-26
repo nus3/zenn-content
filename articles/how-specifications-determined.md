@@ -225,6 +225,7 @@ W3C の役割の説明記事。
   - [詳細の記事](https://www.w3.org/blog/2021/01/whatwg-review-drafts-of-html-and-dom-endorsed-as-w3c-recommendations/)
     - The W3C HTML Working Group was rechartered to assist the W3C community in raising issues and proposing solutions for those specifications.
     - W3C の HTML ワーキンググループは W3C コミュニティが問題を提起し、仕様に関する解決策を提案するのをアシストするために設立
+    - The HTML Working Group expects to bring WHATWG Review Drafts of HTML and DOM to Recommendation once a year.
     - HTML ワーキンググループは年に 1 回 HTML と DOM の WHATWG の Review Draft を W3C 勧告に持ち込む予定
 
 W3C 勧告とは国際的に標準化された技術となること
@@ -239,6 +240,10 @@ https://wemo.tech/795
 - https://github.com/w3c/webcomponents
 - https://github.com/whatwg/html
 - https://github.com/whatwg/dom
+
+- [HTML の history](https://www.w3.org/standards/history/html)
+  - 2021-01-28 に Recommendation
+  -
 
 ## CSS
 
