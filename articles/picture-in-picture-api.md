@@ -3,7 +3,7 @@ title: "オリジントライアルになったDocument Picture-in-Picture API�
 emoji: "📺"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["webapi"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
@@ -49,7 +49,7 @@ Document Picture-in-Picture API では `documentPictureInPicture` を使って P
 
 `documentPictureInPicture.requestWindow()` を実行することで Picture-in-Picture のウインドウが表示されます。
 
-`requestWindow()` はウインドウが表示した際に resolve する Promise を返します。この Promise は、クリックなどのユーザー操作時以外の場合には reject します。
+`requestWindow()` はウインドウが表示された際に resolve する Promise を返します。この Promise は、クリックなどのユーザー操作時以外の場合には reject します。
 
 ```ts
 // ボタンをクリックした時にPicture-in-Pictureのウインドウを表示する
@@ -58,8 +58,8 @@ button.addEventListener("click", async () => {
 });
 
 // ユーザー操作時以外の場合は以下のようなエラーを返します
-// Uncaught (in promise) DOMException: Failed to execute 'requestWindow' on 'DocumentPictureInPicture': Document PiP requires user activation
 documentPictureInPicture.requestWindow();
+// Uncaught (in promise) DOMException: Failed to execute 'requestWindow' on 'DocumentPictureInPicture': Document PiP requires user activation
 ```
 
 ### 元のウインドウで定義した CSS を Picture-in-Picture ウインドウにもコピーする
@@ -103,7 +103,7 @@ const pipWindow = documentPictureInPicture.window
 
 ### Picture-in-Picture ウインドウが閉じる際の処理を追加する
 
-Picture-in-Picture ウインドウは閉じるアイコンをクリックするか、`close()` メソッドを実行することでウインドウを閉じることができます。
+Picture-in-Picture ウインドウは閉じるアイコンをクリックするか、`close()` メソッドを実行することで閉じることができます。
 
 ![Picture-in-Picture ウインドウの閉じるアイコン](/images/picture-in-picture-api/close.png =400x)
 
