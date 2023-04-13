@@ -3,7 +3,7 @@ title: "オリジントライアルになったDocument Picture-in-Picture API�
 emoji: "📺"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["webapi"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
