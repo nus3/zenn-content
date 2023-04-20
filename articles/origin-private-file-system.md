@@ -1,66 +1,66 @@
 ---
-title: "The origin private file system"
-emoji: "🌟"
+title: "Origin Private File Systemを使ってブラウザ上でファイルを高速に操作しよう"
+emoji: "📁"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["webapi"]
 published: false
 ---
 
-## メモ
+## 3 行まとめ
 
-### https://developer.chrome.com/articles/origin-private-file-system/#browser-support を読んでみて
+- Origin Private File System という名の通り、Origin に紐づくプライベートなファイルシステムが扱える API
+- Firefox 111 で実装されたことで、主要ブラウザで使える
+- Origin Private File System は FileSystem Access API よりもファイル操作のパフォーマンスが良い
 
-- オリジンプライベートファイルシステム(OPFS)でページのオリジンに非公開でユーザーには見えないストレージエンドポイント導入できる？
-- テキストファイルを Web アプリケーションで開く従来の方法
-  - <input type="file">でファイルを開く
-  - <a download="ToDo.txt">でダウンロードする
-  - folder を開くには <input type="file" webkitdirectory>を使う
-- モダンな方法は File System API を使う
-  - ToDo.txt を`showOpenFilePicker()`で開き、FileSystemFileHandle オブジェクトを取得
-  - FileSystemFileHandle オブジェクトから getFile()で File 取得する
-  - ファイルを変更し、requestPermission({mode: 'readwrite'})でハンドルする
-  - ユーザーがアクセプトしたら、変更内容を元のファイルに保存
-  - showSaveFilePicker()でも、ファイルを更新することができる
-- これらの方法はユーザーから見えるファイルシステムで行う
-- ウェブから保存されたファイルはセキュリティ的に危ないから OS が追加の警告をできるようになっている
-- File System Access API での操作は遅くなるかも
-- ファイルはデータを記録するために優れてる
-  - SQLite は DB を単一ファイルに保存する
-- 従来の Web ベースのファイル処理をパフォーマンスのコストなしに使う方法としてオリジンプライベートファイルシステム
-- オリジンプライベートファイルシステムはユーザーには表示されない
-- プライベートなファイルとフォルダでオリジンに対してプライベート
-- 同一のオリジンであればオリジンプライベートファイルシステムを確認できる
-- OPFS は navigator.storage.getDirectory()でアクセスできる
-  - 最初は空
-- ルートディレクトリ以外は同じ扱いができる
-- OPFS はユーザーに表示されないため、許可プロンプトや安全なブラウジングチェックはない
-- OPFS は全てのブラウジングデータやサイトデータを削除すると、削除される(localStorage, IndexDB と同様)
-- ストレージの使用量も確認できる
-- 仕様は WHATWG の File System Living Standard で策定されてる
-- Firefox111 でリリースされたことで、主要なブラウザで利用できる
-- OPFS のルートディレクトリにアクセスする
+## Origin Private File System とは
 
-```js
-const opfsRoot = await navigator.storage.getDirectory();
-```
+https://developer.chrome.com/articles/origin-private-file-system/
 
-- OPFS はメインスレッドと Web Worker から使用できる
-- Web Worker だと OPFS は同期的に扱える？
-- ファイル操作を最速で行う場合は Web Worker 上で OPFS を扱う方がいいっぽい
-- メインスレッドでファイル操作する
-  - getFileHandle('file name', {create: true})や getDirectoryHandle('directory name', {create: true})でファイルやフォルダを作成できる
-  - すでに同じファイル名やフォルダ名がある場合は、そのファイルやフォルダにアクセスする
-  - createWritable()を使うことでデータをファイルにストリームでき、内容を書き込むことができる
-    - ストリームは最後に close()する必要がある
-  - ファイル、フォルダの削除
-    - remove()は現在 Chrome のみ実装
+Origin と紐づき、ユーザには非公開なブラウザ上で扱えるファイルシステムです。
 
-```js
-await fileHandle.remove();
-await directoryHandle.remove({ recursive: true });
-```
+## なぜ Origin Private File System を使うのか
 
-- chrome で実装された move()メソッドを使うことでファイルやファルだのリネームや移動ができる
-- resolve()でファイルやフォルダのパスを確認できる
+Origin Private File System を使わずとも `Blob` と `URL.createObjectURL()` を組み合わせて `a` 要素をクリックすることでファイルをダウンロードする方法や、File System Access API の `window.showOpenFilePicker()` など使うことでファイル操作はできます。
 
-TODO: https://developer.chrome.com/articles/origin-private-file-system/#using-the-origin-private-file-system-in-a-web-worker から読む
+しかし、これらの方法は手元にダウンロードしたファイルが残ったり、ユーザーから見えるフォルダ、ファイルが対象なので安全性の観点からファイル操作のパフォーマンスが最適化されないなどの問題があります。
+
+参考: [Google Safe Browsing](https://safebrowsing.google.com/)
+
+Origin Private File System を使うことで、ユーザーには見えないフォルダ、ファイルとして扱えます。また、Origin Private File System 上でのファイル操作は Safe Browsing の対象にはならないので、その分、パフォーマンスのコストを考えずにファイルの操作ができます。
+
+実際に「SQLite3 WASM/JS」では、Origin Private File System が採用されています。
+
+参考: [SQLite Wasm in the browser backed by the Origin Private File System](https://developer.chrome.com/blog/sqlite-wasm-in-the-browser-backed-by-the-origin-private-file-system)
+
+## Origin Private File System を使ってファイルを操作してみよう
+
+実際に Origin Private File System 上でファイルの作成、読込、更新、削除を実装してみましょう。
+
+次のリンクから実装したものを確認できます。
+
+https://nus3.github.io/ui-labs/opfs/
+
+また、[nus3/ui-labs](https://github.com/nus3/ui-labs/tree/main/src/opfs)でコードも確認できます。
+
+### ファイルの作成
+
+### ファイルの更新
+
+### ファイルの読込
+
+### ファイルの削除
+
+### ファイルの移動
+
+### Web Worker 上でファイルを更新
+
+### Debug
+
+各ブラウザの DevTools が対応するまでは[OPFS Explorer](https://chrome.google.com/webstore/detail/opfs-explorer/acndjpgkpaclldomagafnognkcgjignd)を使うことで、Origin Private File System 上のファイルとフォルダを確認できます。
+
+![デバッグに使えるOPFS Explorer拡張](/images/origin-private-file-system/opfs-explorer.png)
+_OPFS Explorer でフォルダとファイル_
+
+## 最後に
+
+Origin Private File System の API が提供されることで、ファイルシステムの仕組みが簡単に実装できるようになって良いですね。クライアントサイドで完結するメモアプリなどを作ってみても楽しそうと筆者は感じました。
