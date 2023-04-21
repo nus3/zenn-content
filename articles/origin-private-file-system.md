@@ -176,7 +176,7 @@ worker.postMessage({ fileName: "nus3File", text: "Hello nus4" });
 各ブラウザの DevTools が対応するまでは[OPFS Explorer](https://chrome.google.com/webstore/detail/opfs-explorer/acndjpgkpaclldomagafnognkcgjignd)を使うことで、Origin Private File System 上のファイルとフォルダを確認できます。
 
 ![デバッグに使えるOPFS Explorer拡張](/images/origin-private-file-system/opfs-explorer.png)
-_OPFS Explorer でフォルダとファイル_
+_OPFS Explorer で表示されるフォルダとファイル_
 
 ## 最後に
 
