@@ -4,6 +4,7 @@ emoji: "📁"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["webapi"]
 published: true
+publication_name: "cybozu_frontend"
 ---
 
 ## 3 行まとめ
