@@ -11,7 +11,9 @@ publication_name: "cybozu_frontend"
 
 本記事は、11 月 26 日に行われた JSConf.jp のサイボウズのセッションの中で紹介した内容の詳細版になります。このセッションでは、フロントエンドエキスパートチームのメンバーが 2022 年の印象に残ったフロントエンドトピックについて話していますので、興味のある方は是非ご覧ください！
 
-https://youtu.be/ccysINf4qTE?t=17514
+https://www.youtube.com/live/ccysINf4qTE
+
+(4:51:50 あたりから始まります)
 
 ## 主要ブラウザ全てで実装された機能
 
