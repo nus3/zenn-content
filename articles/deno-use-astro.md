@@ -9,6 +9,10 @@ publication_name: "cybozu_frontend"
 
 ## 3 行まとめ
 
+- Deno v1.35 で npm と Node の互換性がさらに向上
+- `npm:astro` を使って Deno で Astro が使える
+- Deno で完結した Astro プロジェクトが Deno Deploy にデプロイできる
+
 ## Deno v1.35 のリリース
 
 https://deno.com/blog/v1.35
