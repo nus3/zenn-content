@@ -9,14 +9,11 @@ publication_name: "cybozu_frontend"
 
 こんにちは！サイボウズ株式会社フロントエンドエキスパートチームの [@nus3\_](https://twitter.com/nus3_) です。
 
-# はじめに
+## はじめに
 
 サイボウズでは毎週火曜日に Frontend Weekly という「1 週間の間にあったフロントエンドニュースを共有する会」を社内で開催しています。
 
 今回は、2023/08/01 の Frontend Weekly で取り上げた記事や話題を紹介します。
-
-# 取り上げた記事・話題
-
 
 ## How React 18 Improves Application Performance – Vercel
 
