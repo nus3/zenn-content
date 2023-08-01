@@ -59,7 +59,7 @@ GitHubが「パッケージやリポジトリを利用した攻撃」につい�
 
 https://astro.build/blog/astro-290/
 
-Astro 2.9がリリースされました。2.9で実装されたサポートされていないブラウザのことも考慮しつつ、View Transitions APIが使えるView Transitionsについて特に社内では話していました。View Transitionsについてはこちらの記事が参考になります。
+Astro 2.9がリリースされました。社内ではView Transitionsの機能が話題になりました。この機能はView Transitions APIがサポートされていないブラウザのことも考慮された実装になっています。View Transitionsについてはこちらの記事が参考になります。
 
 https://zenn.dev/cybozu_frontend/articles/astro-view-transitions
 
