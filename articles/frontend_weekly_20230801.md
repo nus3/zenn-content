@@ -25,7 +25,7 @@ React18で新しく導入されたTransitions、Suspense、React Server Componen
 
 https://twitter.com/dan_abramov/status/1682029195843739649?s=20
 
-ReactチームにいたDanさんがmeta社を離れるとのことです。引き続きReactチームには関わっていくことや、ここ最近は新しいReactのドキュメント作成やコミュニティ周りの活動をされていたことがツイートで紹介されています。
+ReactチームにいたDanさんがMeta社を離れるとのことです。引き続きReactチームには関わっていくことや、ここ最近は新しいReactのドキュメント作成やコミュニティ周りの活動をされていたとツイートしています。
 
 ## How Turborepo is porting from Go to Rust – Vercel
 
