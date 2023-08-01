@@ -47,7 +47,7 @@ Bunのv0.7.0がリリースされ、Vite, WebWorker, structuredClone, AsyncLocal
 
 https://partykit.io/
 
-リアルタイムやマルチプレイヤー向けのアプリケーションを作るための SDK が公開されました。このSDKでは、Edge も含めた多様なランタイムや、Yjs のサポート入っています。
+リアルタイムやマルチプレイヤー向けのアプリケーションを作るための SDK が公開されました。このSDKでは、Edge も含めた多様なランタイムや、Yjs のサポートが入っています。
 
 ## Security alert: social engineering campaign targets technology industry employees - The GitHub Blog
 
