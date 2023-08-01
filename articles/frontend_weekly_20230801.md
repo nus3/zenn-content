@@ -67,7 +67,7 @@ https://zenn.dev/cybozu_frontend/articles/astro-view-transitions
 
 https://www.builder.io/blog/introducing-valibot
 
-1kb以下にファイルサイズを抑えられる、Zodの代替のValibotの紹介です。Zodとは違い、バリデーションの機能をチェーンメソッドではなく関数で提供することでTree Shakingが有効になり、ビルド後のファイルサイズを抑えられるそうです。社内では試しにZodを使ったプロダクトで代わりにValibotを使うとファイルサイズが10分の1程度になったことなどを話していました。
+Zodよりもファイルサイズが抑えられるValibotの紹介です。Zodとは違い、バリデーションの機能をチェーンメソッドではなく関数で提供することでTree Shakingが有効になり、ビルド後のファイルサイズを抑えられるそうです。社内では試しにZodを使ったプロダクトで代わりにValibotを使うとファイルサイズが10分の1程度になったことなどを話していました。
 
 
 ## Jotaiで快適フロントエンド開発 | 株式会社ヌーラボ(Nulab inc.)
