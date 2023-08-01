@@ -74,7 +74,7 @@ Zodよりもファイルサイズが抑えられるValibotの紹介です。Zod�
 
 https://nulab.com/ja/blog/nulab/react-jotai/
 
-Jotaiの基本や、RecoilからJotaiに移行によるJotaiとRecoilの比較が紹介されています。Recoilでは現状、主要なメンテナーがレイオフの対象になって開発が止まっているとのことで、状態管理の技術選定に影響がありそうですね。
+状態管理をRecoilからJotaiへと移行した際の比較や、Jotaiの使い方が紹介されています。Recoilでは現状、主要なメンテナーがレイオフの対象になって開発が止まっているとのことで、状態管理の技術選定に影響がありそうですね。
 
 ## Arc from The Browser Company
 
