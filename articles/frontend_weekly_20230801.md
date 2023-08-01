@@ -19,7 +19,7 @@ publication_name: "cybozu_frontend"
 
 https://vercel.com/blog/how-react-18-improves-application-performance
 
-パフォーマンスの向上させるReact18 で新しく導入された transition, suspense, react server components などの機能の解説です。React17以前とReact18の`concurrent rendering`でのレンダリングの違いや、React18で導入された新機能が図やサンプルコードと合わせて紹介されています。
+React18で新しく導入されたTransitions、Suspense、React Server Componentsなどをパフォーマンスの観点から解説しています。React17以前とReact18の`concurrent rendering`でのレンダリングの違いや、React18で導入された新機能が図やサンプルコードと合わせて紹介されています。
 
 ## i feel bittersweet sharing i’m leaving my job at meta in a few weeks.
 
