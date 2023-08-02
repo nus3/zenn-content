@@ -3,7 +3,7 @@ title: "Next.jsのCacheを網羅したドキュメントの公開など : Cybozu
 emoji: "💴"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["CybozuFrontendWeekly", "frontend"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
