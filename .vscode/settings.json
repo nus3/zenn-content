@@ -6,5 +6,5 @@
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["astro"]
+  "cSpell.words": ["astro", "Deno"]
 }
