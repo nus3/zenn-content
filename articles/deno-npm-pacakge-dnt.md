@@ -1,5 +1,5 @@
 ---
-title: "Denoのモジュールをdntでnpmパッケージとして、お手軽に公開しよう"
+title: "Deno + dntで簡単にnpmパッケージを作ろう"
 emoji: "🦖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["deno", "npm"]
