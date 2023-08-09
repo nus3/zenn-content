@@ -3,7 +3,7 @@ title: "Deno + dntで簡単にnpmパッケージを作ろう"
 emoji: "🦖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["deno", "npm"]
-published: true
+published: false
 publication_name: "cybozu_frontend"
 ---
 
