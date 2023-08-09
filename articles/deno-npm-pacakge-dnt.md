@@ -3,24 +3,15 @@ title: "Denoのモジュールをdntでnpmパッケージとして、お手軽�
 emoji: "🦖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["deno", "npm"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
-## 書きたいこと
-
-- Deno で実装したモジュールが、CJS、ESM、TypeScript に対応した npm パッケージとして公開できる
-  - Deno で実装したモジュールに対して、[dnt](https://github.com/denoland/dnt) を使ってビルドするとできる
-  - import 時に`npm:`や esm.sh を使ってる場合は、依存関係に追加される
-- Deno だと Linter、Formatter、Test のライブラリ入れなくて良い
-- Deno のグローバルなオブジェクトとかは shim を使うことで対応
-- ビルドした npm パッケージの ESM、CJS 両方で Node.js でテストを実行してくれる
-- ビルド後のパッケージのタイプチェックもしてくれる
-- GitHub Action で CICD 作ってみて、改めて Deno は楽でいいな〜
-- ビルド後のファイルからどんな感じに Dual Packages になってるのか調べる
-  - 生成されたファイルの type しか記載されていない package.json とか
-
 ## 3 行まとめ
+
+- CJS、ESM に対応した npm パッケージが Deno + `dnt`で簡単に作成できる
+- Deno で開発できるので、Lint、Format、Test、TypeCheck が設定なしですぐに使える
+- `dnt`で作成した CJS、ESM のファイルに対して、それぞれ Node.js でもテストを実行してくれる
 
 ## Deno のモジュールを npm パッケージに変換する`dnt`
 
@@ -44,7 +35,7 @@ https://github.com/nus3/deno-npm-package
 
 まず、[`cowsay`](https://www.npmjs.com/package/cowsay)を使ったシンプルなモジュールを作ります。
 
-```ts
+```ts: mod/index.ts
 import cowsay from "npm:cowsay@1.5.0";
 
 export function cowsayNus3() {
@@ -52,9 +43,9 @@ export function cowsayNus3() {
 }
 ```
 
-このモジュールでは、[`npm:`specifiers](https://deno.land/manual@v1.36.0/node/npm_specifiers)を使って`cowsay`パッケージをインポートしています。`npm:`specifiers や[Skypack](https://www.skypack.dev/)、[esm.sh](https://esm.sh/)経由で使用されるパッケージは、`dnt`によって次のように依存関係に追加されます。
+このモジュールでは、[`npm:`specifiers](https://deno.land/manual@v1.36.0/node/npm_specifiers)を使って`cowsay`パッケージをインポートしています。`npm:`specifiers や[Skypack](https://www.skypack.dev/)、[esm.sh](https://esm.sh/)経由で使用されるパッケージは、`dnt`によってビルド後の`pacakge.json`の依存関係に追加されます。
 
-```json:package.json
+```json:npm/package.json
 {
   "dependencies": {
     "cowsay": "1.5.0"
@@ -62,11 +53,24 @@ export function cowsayNus3() {
 }
 ```
 
+### Deno でテストを実装
+
+Deno で作成したモジュールに対するテストを追加します。
+
+```ts: mod/index_test.ts
+import { assertStringIncludes } from "https://deno.land/std@0.192.0/testing/asserts.ts";
+import { cowsayNus3 } from "./index.ts";
+
+Deno.test("Cow should say Hello nus3!", () => {
+  assertStringIncludes(cowsayNus3(), "Hello nus3!");
+});
+```
+
 ### ビルドして npm パッケージを作成
 
-次に、`dnt`を使って Deno で実装したモジュールを npm パッケージとしてビルドします。
+次に、`dnt`を使って Deno で実装したモジュールを npm パッケージとしてビルドします。今回はルート直下に`build_npm.ts`というファイルを作成し、そこに`dnt`の設定を追加します。
 
-```ts
+```ts: build_npm.ts
 import { build, emptyDir } from "https://deno.land/x/dnt@0.37.0/mod.ts";
 
 await emptyDir("./npm");
@@ -97,15 +101,83 @@ await build({
 });
 ```
 
+作成したファイルを`deno run -A build_npm.ts {version}`のように Deno で実行することで、対象のモジュールが npm パッケージとしてビルドされ、今回の場合、`npm`ディレクトリに出力されます。
+
+```sh
+❯ deno run -A build_npm.ts 0.0.1
+[dnt] Transforming...
+[dnt] Running npm install...
+
+added 47 packages, and audited 48 packages in 5s
+
+3 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+[dnt] Building project...
+[dnt] Type checking ESM...
+[dnt] Emitting ESM package...
+[dnt] Emitting script package...
+[dnt] Running post build action...
+[dnt] Running tests...
+
+> @nus3/cowsay-nus3@0.0.1 test
+> node test_runner.js
+
+Running tests in ./script/index_test.js...
+
+test Cow should say Hello nus3! ... ok
+
+Running tests in ./esm/index_test.js...
+
+test Cow should say Hello nus3! ... ok
+[dnt] Complete!
+```
+
+実行時のログを見るとわかりますが、`dnt`ではビルドで生成した ESM、CJS 両方の形式のファイルに対して、Deno で書いたテストを Node.js で実行してくれます。
+
+サンプルリポジトリでは、[`example`配下](https://github.com/nus3/deno-npm-package/tree/main/example)で公開したパッケージを`require`、`import` で呼び出せるか確認できるようにしてあります。
+
 ### GitHub Action で CICD を整える
+
+[前述した記事](https://deno.com/blog/publish-esm-cjs-module-dnt#automate-with-github-actions)に GitHub 上で Release を作成することで npm に公開する GitHub Actions が紹介されています。
+
+ただ、せっかくなので今回は合わせて、Lint、Format、Test、TypeCheck が GitHub Actions 上で実行されるようにしましょう。
+
+```yaml
+name: CI
+on:
+  pull_request:
+
+jobs:
+  ci:
+    name: Check lint and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Lint
+        run: deno lint
+      - name: Test
+        run: deno test -A
+      - name: Check format
+        run: deno fmt --check
+      - name: Type check
+        run: deno check mod/**.ts
+      - name: Build
+        run: deno run -A build_npm.ts
+```
+
+Deno を実行できる環境を用意するだけで Lint、Format、Test、TypeCheck が使えるので、とてもシンプルに実装することができて良きですね。
 
 ## あとがき
 
-- エコシステムが用意された状態で、簡単に npm パッケージを作れる
-- npm の互換性も上がってる
-- cjs、esm 両方でテストしてくれる
-- 使うしかない
+最後の GitHub Actions が特に顕著ですが、Deno をインストールすることで開発に必要なエコシステムが用意された状態で、tsconfig などの設定も要らず、すぐに開発に着手できるのがとても良い点だと感じました。
 
-```
+さらに、今回紹介した`dnt`を使うことで、npm パッケージを作成する上で考慮しなければいけない点を`dnt`が担ってくれます。
 
-```
+もちろん、2023/08/09 現在、`dnt`のバージョンは 0.38.0 でまだメジャーバージョンではない点や、使用したい npm パッケージがまだ Deno ではサポートされていない可能性もあります。しかし、Deno はバージョンを上げるごとに Node.js との互換性がどんどん上がっているので、npm パッケージを作成する際に Deno + `dnt`を選択肢の 1 つとして試してみるのはいかがでしょうか。
