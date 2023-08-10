@@ -3,7 +3,7 @@ title: "Deno + dntでCJS・ESMに対応したnpmパッケージを作ろう"
 emoji: "🦖"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["deno", "npm"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
