@@ -1,5 +1,5 @@
 ---
-title: "<select>を自由にカスタマイズできる<selectlist>について"
+title: "select要素を自由にカスタマイズできるselectlist要素について"
 emoji: "📜"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["html"]
