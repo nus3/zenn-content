@@ -1,6 +1,6 @@
 ---
 title: "<select>を自由にカスタマイズできる<selectlist>について"
-emoji: "🎃"
+emoji: "📜"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["html"]
 published: true
