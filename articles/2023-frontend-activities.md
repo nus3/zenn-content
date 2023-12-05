@@ -100,21 +100,6 @@ kintone という自社で開発しているプロダクトの[フロントエ�
 
 https://adventar.org/calendars/9255
 
-## メモ
-
-- Burikaigi
-- フロリア Mira
-- パフォーマンス計測
-- フロリア Nable
-- サイボウズフロントエンド通信
-- WEB+DB PRESS への執筆
-- Zenn への記事投稿
-- フロントエンドはじめの一歩登壇
-- 次世代 web カンファレンス
-- Vue Fes 運営
-- ハシコウ作成
-- BAR フロントえんどう
-
 ### LoL 用語のリンク
 
 - https://lol-youseijo.com/words/
