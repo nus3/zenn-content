@@ -7,6 +7,10 @@ published: false
 publication_name: "cybozu_frontend"
 ---
 
+:::message
+※ この記事はフロントエンド横断支援チームの活動紹介記事です。私の好きなゲームに例えながら紹介していきます。 ゲームに例えない場合 に真面目バージョンが書いてあります。
+:::
+
 私は League of Legends(以下、LoL) というゲームを愛しています。
 
 https://www.leagueoflegends.com/ja-jp/
@@ -39,7 +43,7 @@ LoL はルールが分かればプレイするのも観戦するのもどちら�
 
 https://blog.cybozu.io/entry/2023/09/06/133726
 
-参考: https://youtu.be/4P2SrnPMldc?si=cCWCjxB-kcsNQutS
+参考: [ブライアー：チャンピオンスポットライト | ゲームプレイ - リーグ・オブ・レジェンド](https://youtu.be/4P2SrnPMldc?si=cCWCjxB-kcsNQutS)
 
 :::details LoL に例えない場合
 
@@ -66,7 +70,7 @@ nus3 のチャンピオンスポットライトへようこそ。
 
 彼の固有スキルはフロントエンド開発の支援や相談だ。
 
-参考: https://youtu.be/lhtKD9n6m-w?si=u8WT8l85yZTq4F4J
+参考: [ミリオ：チャンピオンスポットライト | ゲームプレイ - リーグ・オブ・レジェンド](https://youtu.be/lhtKD9n6m-w?si=u8WT8l85yZTq4F4J)
 
 :::details LoL に例えない場合
 
