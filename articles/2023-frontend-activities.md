@@ -8,7 +8,7 @@ publication_name: "cybozu_frontend"
 ---
 
 :::message
-※ この記事はフロントエンド横断支援チームの活動紹介記事です。私の好きなゲームに例えながら紹介していきます。 ゲームに例えない場合 に真面目バージョンが書いてあります。
+※ この記事はフロントエンド横断支援チームの活動紹介記事です。私の好きなゲームに例えながら紹介していきます。 LoL に例えない場合に真面目バージョンが書いてあります。
 :::
 
 私は League of Legends(以下、LoL) というゲームを愛しています。
@@ -86,7 +86,7 @@ kintone という自社で開発しているプロダクトの[フロントエ�
 
 年末が近づき、今年のシーズンもまもなく終了となります！ パッチ 2023.12 で一年を締めくくりましょう！
 
-参考: https://www.leagueoflegends.com/ja-jp/news/game-updates/patch-13-24-notes/
+参考: [パッチノート 13.24](https://www.leagueoflegends.com/ja-jp/news/game-updates/patch-13-24-notes/)
 
 ### サモナーズリフトへの情報発信
 
