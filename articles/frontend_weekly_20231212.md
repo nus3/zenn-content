@@ -21,7 +21,7 @@ https://github.com/facebook/stylex
 
 StyleX のリリースに合わせて、GitHub で StyleX のコードが公開されました。
 
-参加したメンバーが[調査した内容](https://zenn.dev/b4h0_c4t/scraps/771984492e7185)も踏まえて、StyleX がどういった API を提供しているのか話していました。
+参加したメンバーが[調査した内容](https://zenn.dev/b4h0_c4t/scraps/771984492e7185)も踏まえて、StyleX がどういった API を提供しているのか話しました。
 
 ## ECMAScript 考古学をするときに
 
@@ -35,13 +35,13 @@ https://github.com/clauderic/dnd-kit/issues/1194
 
 dnd-kit に対して、メンテナンスは継続してやっていくのか、これからのロードマップがどうなるのか確認する issue が作られていました。最近 issue のトリアージや PR が捌けてないのは重要なリファクタリングをしているからとのことです。
 
-11 月にリリースもされており、これからもメンテナンスされるそうです
+11 月にリリースもされており、これからもメンテナンスは継続するようです。
 
 ## Web Performance Calendar
 
 https://calendar.perfplanet.com/2023/
 
-パフォーマンスに関するアドベントカレンダーが今年も開催されました。このアドベントカレンダーの記事の中から次の内容を話していました。
+パフォーマンスに関するアドベントカレンダーが今年も開催されました。このアドベントカレンダーの中から次の記事について話しました。
 
 - [Benchmarking, Profiling, and Optimizing JavaScript libraries](https://calendar.perfplanet.com/2023/benchmarking-profiling-and-optimizing-javascript-libraries/)
   - JS ライブラリのベンチマーク、プロファイリング、最適化について
@@ -56,7 +56,7 @@ https://deno.com/blog/cron
 
 スケジュールされたジョブを簡単に作成できる Deno Cron がリリースされました。
 
-Deno Deploy にデプロイしている場合、`Deno.cron()`を宣言することですぐにジョブをスケジュールできます。
+Deno Deploy にデプロイしている場合、`Deno.cron()`を宣言することで簡単にジョブをスケジュールできます。
 
 ## CSS Snapshot 2023
 
