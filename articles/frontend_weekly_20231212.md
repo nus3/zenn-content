@@ -27,7 +27,7 @@ https://github.com/facebook/stylex
 
 https://zenn.dev/cybozu_frontend/articles/ecmascript-archeology
 
-先日開催された JS Conf JP 2023 で [@sajikix](https://twitter.com/sajikix) が[「Intl の今までとこれから」](https://speakerdeck.com/sajikix/intlnojin-madetokorekara)という発表をしました。この記事は Intl の策定の歴史を調べる過程で得た「ECMAScript の仕様の歴史を追う方法」をまとめた記事です。
+先日開催された JSConf JP 2023 で [@sajikix](https://twitter.com/sajikix) が[「Intl の今までとこれから」](https://speakerdeck.com/sajikix/intlnojin-madetokorekara)という発表をしました。この記事は Intl の策定の歴史を調べる過程で得た「ECMAScript の仕様の歴史を追う方法」をまとめた記事です。
 
 ## dnd-kit: future of library & maintenance
 
