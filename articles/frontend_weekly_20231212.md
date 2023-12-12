@@ -13,13 +13,13 @@ publication_name: "cybozu_frontend"
 
 サイボウズでは毎週火曜日に Frontend Weekly という「1 週間の間にあったフロントエンドニュースを共有する会」を社内で開催しています。
 
-今回は、2023/12/12 の Frontend Weekly で取り上げた記事や話題を紹介します。
+今回は、2023 年 12 月 12 日 の Frontend Weekly で取り上げた記事や話題を紹介します。
 
 ## StyleX のコードが公開
 
 https://github.com/facebook/stylex
 
-StyleX のリリースに合わせて、GitHub で StyleX のコードが公開されました。
+[StyleX](https://stylexjs.com/) のリリースに合わせて、GitHub で StyleX のコードが公開されました。
 
 参加したメンバーが[調査した内容](https://zenn.dev/b4h0_c4t/scraps/771984492e7185)も踏まえて、StyleX がどういった API を提供しているのか話しました。
 
@@ -27,7 +27,7 @@ StyleX のリリースに合わせて、GitHub で StyleX のコードが公開�
 
 https://zenn.dev/cybozu_frontend/articles/ecmascript-archeology
 
-ECMAScript の仕様の歴史を追う方法をまとめた記事です。
+先日開催された JS Conf JP 2023 で [@sajikix](https://twitter.com/sajikix) が[「Intl の今までとこれから」](https://speakerdeck.com/sajikix/intlnojin-madetokorekara)という発表をしました。この記事は Intl の策定の歴史を調べる過程で得た「ECMAScript の仕様の歴史を追う方法」をまとめた記事です。
 
 ## dnd-kit: future of library & maintenance
 
@@ -62,9 +62,9 @@ Deno Deploy にデプロイしている場合、`Deno.cron()`を宣言するこ�
 
 https://www.w3.org/TR/2023/NOTE-css-2023-20231207/
 
-CSS Snapshot 2023 が NOTE として公開されました。
+CSS Snapshot 2023 が Note として公開されました。
 
-この NOTE の中では、CSS の各モジュールの仕様が 2023 現在どういう状態なのかまとめられています。
+この Note の中では、CSS の各モジュールの仕様が 2023 現在どういう状態なのかまとめられています。
 
 ## Safari 17.2
 
