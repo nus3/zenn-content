@@ -3,7 +3,7 @@ title: "Safari 17.2のリリースなど: Cybozu Frontend Weekly (2023-12-12号)
 emoji: "🦓"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["CybozuFrontendWeekly", "frontend"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
