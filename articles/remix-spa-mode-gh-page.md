@@ -3,7 +3,7 @@ title: "SPA モードのRemixを GitHub Pages にデプロイする"
 emoji: "💿"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["remix", "githubactions", "githubpages"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
