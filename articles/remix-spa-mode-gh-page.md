@@ -66,7 +66,7 @@ export default defineConfig({
 
 ### GitHub Pages の設定を追加
 
-GitHub Pages は公開先の URL が`https://nus3.github.io/{repository-name}`になるので、その対応を `vite.config.ts` に追加する。
+GitHub Pages は公開先の URL が`https://{github-account-name}.github.io/{repository-name}`になるので、その対応を `vite.config.ts` に追加する。
 
 ```diff typescript: vite.config.ts
 + import { copyFileSync } from "node:fs";
@@ -76,7 +76,7 @@ export default defineConfig({
 + base: "/repository-name/",
   plugins: [remix({
     ssr: false,
-+   basename: "/zustand-pg/",
++   basename: "/repository-name/",
 +   buildEnd(args) {
 +     if (!args.viteConfig.isProduction) return;
 +     const buildPath = args.viteConfig.build.outDir;
