@@ -2,8 +2,8 @@
 title: "「実装例から見る React のテストの書き方」をアップデートする"
 emoji: "🆙"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["react", "vitest", "storybook"]
-published: false
+topics: ["react", "vitest", "storybook", "msw", "testinglibrary"]
+published: true
 publication_name: "cybozu_frontend"
 ---
 
@@ -11,11 +11,21 @@ publication_name: "cybozu_frontend"
 
 https://blog.cybozu.io/entry/2022/08/29/110000
 
-そんな便利だなんてどうもありがとうございますウフフ、と思いながら書いた日を見てみると **2022-08-09** だった。もうすぐ 2 年経とうとしてる。時の流れが早い。怖い。
+そんな便利だなんてどうもありがとうございますウフフ、と思いながら書いた日を見てみると **2022-08-09** だった。もうすぐ 2 年経とうとしてる。時の流れが早くて怖い。
 
-当時、この記事に書かれた実装例は[リポジトリ](https://github.com/nus3/react-test-examples)にまとめていたんだけど、当然、何かメンテをしていたわけもなく、2022 年当時の状態がそのまま残っていた。
+この記事に書かれた実装例は[リポジトリ](https://github.com/nus3/react-test-examples)にまとめていたんだけど、当然、何かメンテをしていたわけもなく、2022 年当時の状態がそのまま残っていた。
 
 せっかく便利に思ってくれる人がいたので、内容をアップデートする。
+
+## アップデートまとめ
+
+- メジャーバージョンのリリースやビルドツールの統一の観点で Jest から Vitest に移行
+- `useFakeTimers({ shouldAdvanceTime: true })`
+- `@testing-library/react`を v15 にバージョンアップ
+- MSW を v2 にバージョンアップ
+- Storybook を v8 にバージョンアップ
+- `composeStories`による Storybook の story を使ったテストでは play 関数を呼ばない
+- play 関数を使ったテストは`@storybook/test-runner`で行う
 
 ## アップデート方針
 
@@ -23,23 +33,23 @@ https://blog.cybozu.io/entry/2022/08/29/110000
 
 - Yarn → pnpm
 - ESLint, Prettier → Biome
-- Jest, @swc/jest → Vitest
-- MSW: v0 → v2
-- @testing-library/react: v13 → v15
+- Jest, `@swc/jest` → Vitest
+- `@testing-library/react`: v13 → v15
 - Storybook: v6 → v8
+- MSW: v0 → v2
 
 テストに関わるもの(MSW, testing-library, Storybook)に関しては単純にバージョンアップ、テストランナー(Vitest)の変更理由に関しては後述する。
 
 それ以外(pnpm, Biome)は「面白そう」ぐらいの軽い気持ちで移行してる。
 
-次の PR は実際に今回作業したものだ。
+今回作業した内容は次の PR にまとめている。
 https://github.com/nus3/react-test-examples/pull/12
 
 ## Yarn → pnpm
 
-最近は使用時の体験が良いので、個人のプロジェクトだともっぱら pnpm を使ってる。
+最近は使用時の体験が良いので、個人のプロジェクトだと pnpm を使うことが多い。
 
-今回の対象のリポジトリは依存するパッケージがそこまで多くなく、イレギュラーなこともしてないので、Yarn v3 から pnpm への移行は簡単だった。
+[対象のリポジトリ](https://github.com/nus3/react-test-examples)は依存するパッケージがそこまで多くなく、イレギュラーなこともしてないので、Yarn v3 から pnpm への移行は簡単だった。
 
 - (モノレポの場合) pnpm-workspace.yaml の作成
 - [`pnpm import`](https://pnpm.io/ja/cli/import)を使い、yarn.lock から pnpm-lock.yaml を生成
@@ -49,13 +59,13 @@ https://github.com/nus3/react-test-examples/pull/12
 
 上記、作業の他に GitHub Actions での pnpm のセットアップが冗長だったので[composite action](https://docs.github.com/en/actions/creating-actions/creating-a-composite-action) を使ったりもした。
 
-### 実際に作業したプルリク
+### 該当プルリク
 
 https://github.com/nus3/react-test-examples/pull/10
 
 ## ESLint, Prettier → Biome
 
-[前回の記事](https://blog.cybozu.io/entry/2022/08/29/110000#%E8%A3%9C%E8%B6%B3-Testing-Library-%E3%81%AE%E8%A8%98%E6%B3%95%E3%82%92%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E3%81%97%E3%81%A6%E3%81%8F%E3%82%8C%E3%82%8Beslint-plugin-testing-library)で紹介した testing-library 用の Plugin は Biome では[対応してない](https://biomejs.dev/linter/rules-sources/#eslint-plugin-barrel-files)が、そのほかのケースには大体対応してくれそうだったのと、ESlint 関連のパッケージの依存を減らせることもあって Biome に移行した。
+[元の記事](https://blog.cybozu.io/entry/2022/08/29/110000#%E8%A3%9C%E8%B6%B3-Testing-Library-%E3%81%AE%E8%A8%98%E6%B3%95%E3%82%92%E3%83%81%E3%82%A7%E3%83%83%E3%82%AF%E3%81%97%E3%81%A6%E3%81%8F%E3%82%8C%E3%82%8Beslint-plugin-testing-library)で紹介した testing-library 用の Plugin は Biome では[対応してない](https://biomejs.dev/linter/rules-sources/#eslint-plugin-barrel-files)が、そのほかのケースには大体対応してくれそうだったのと、ESlint 関連のパッケージの依存を減らせることもあって Biome に移行した。
 
 大まかな作業内容としては次になる。
 
@@ -123,27 +133,42 @@ Biome ではインデントがデフォルトで tab になっているので、
 ```json:biome.json
 {
   "formatter": {
+    "enabled": true,
     "indentStyle": "tab" or "space",
   }
 }
 
 ```
 
-### 実際に作業したプルリク
+### モノレポの場合
+
+Biome の VSCode 拡張では、[ワークスペースのルートディレクトリにある`biome.json`を自動的に読み込む](https://biomejs.dev/ja/reference/vscode/#%E8%A8%AD%E5%AE%9A%E3%81%AE%E8%AA%AD%E3%81%BF%E8%BE%BC%E3%81%BF)。
+
+なので対象のプロジェクトがモノレポの場合は、ワークスペースのルートディレクトリに`biome.json`がないと、指定したルールが適用されないので注意が必要。ルート直下にベースの`biome.json`を作り、モノレポで管理している各パッケージはルート直下の config を[`extends`](https://biomejs.dev/guides/how-biome-works/#the-extends-option)を使って読み込むのも良いかも。
+
+### Biome v1.7
+
+https://biomejs.dev/blog/biome-v1-7/
+
+Biome v1.7 で ESLint や Prettier の移行をサポートするコマンドがリリースされたので、既存プロジェクトの Biome への移行はもっと簡単になりそう。
+
+### 該当プルリク
 
 https://github.com/nus3/react-test-examples/pull/14
 
-## Jest, @swc/jest → Vitest
+## Jest, `@swc/jest` → Vitest
 
-元の記事を書いた 2022-08-09 は Vitest のバージョンが [v0.21.1](https://github.com/vitest-dev/vitest/releases/tag/v0.21.1) であり、ドキュメントにまだ experimental だよみたいなことが書かれていた気がするので、当時は Jest を採用することが多かった。
+[元の記事](https://blog.cybozu.io/entry/2022/08/29/110000)を書いた 2022-08-09 は Vitest のバージョンが [v0.21.1](https://github.com/vitest-dev/vitest/releases/tag/v0.21.1) であり、ドキュメントにまだ experimental だよみたいなことが書かれていた気がするので、当時は Jest を採用することが多かった。
 
-その後、Vitest のメジャーバージョンがリリースされたこともあり、今は Vite を使っているプロダクトであればビルドツールを統一できる Vitest を採用するのが自然かなと思う。
+その後、Vitest のメジャーバージョンがリリースされたこともあり、今は Vite を使っているプロダクトであればビルドツールを統一できる Vitest を採用するのが自然な流れかもしれない。
 
 そんな背景もあり今回は Jest から Vitest に移行した。
 
 - Vitest のインストール、Vite を v5 にアップデート
 - vite.config.ts にテスト用の設定を追加
+- `whatwg-fetch`の削除
 - [マイグレーションガイド](https://vitest.dev/guide/migration.html#migrating-from-jest)を元に jest→Vitest へテストコードを修正する
+- Jest や`@swc/jest`など関連するライブラリの削除
 
 ### vite.config.ts にテスト用の設定を追加
 
@@ -161,119 +186,62 @@ export default defineConfig({
 });
 ```
 
+- [`globals`](https://vitest.dev/config/#globals): Jest のように globals API として Vitest の API を使いたいかどうか
+  - [マイグレーションガイド](https://vitest.dev/guide/migration.html#globals-as-a-default)に記載があるが、この設定を false にすると testing-library は DOM のクリーンアップをしてくれないので true にしている
+- [`css`](https://vitest.dev/config/#css): CSS ファイルを処理するかどうか
+
+`@testing-library/jest-dom`が提供する Custom matchers は使いたいので、次のように、setup のファイルでは`@testing-library/jest-dom`を import する。
+
+```ts: test/setup.ts
+import "@testing-library/jest-dom";
+```
+
+### `whatwg-fetch`の削除
+
+[元の記事](https://blog.cybozu.io/entry/2022/08/29/110000)では Node.js v16 でテスト実行していたので [`whatwg-fetch`](https://github.com/whatwg/fetch)を使って`fetch`を polyfill していたが、Node.js の v18 からフラグなしで`fetch`が使えるようになったので削除。
+
+> v18.0.0: No longer behind --experimental-fetch CLI flag.
+> [https://nodejs.org/docs/v20.12.1/api/globals.html#fetch](https://nodejs.org/docs/v20.12.1/api/globals.html#fetch)
+
+また、Node.js の v21 から `fetch` は stable になる。
+[https://nodejs.org/en/blog/release/v21.0.0](https://nodejs.org/en/blog/release/v21.0.0)
+
 ### Jest→Vitest へテストコードを修正
 
-次のような関数を vitest から import するように変更する.
+次のような関数を Vitest から import するように変更。
 
 - `afterAll`や`afterEach`などの hook 系のメソッド
 - `test`や`describe`
-- `jest.fn`、`jest.mock`などは`vi.fn`、`vi.mock`に変更
+- `jest.fn`、`jest.mock`、`jest.useFakeTimers`などは`jest`部分を`vi`(`vi.fn`)に変更する
 
-https://github.com/nus3/react-test-examples/pull/13/commits/bff36b208e9d41a100c485ade53d193d339c22ac
+config で`globals`を true にしているので、上記の関数やオブジェクトは import しなくてもテストは問題なく実行されるが、Vitest でのデフォルトの挙動を尊重し、明示的に import している。(本音は testing-library での DOM のクリーンアップしてくれるなら`globals`は false にしたい)
 
 ### `@vitest/ui`と VSCode 拡張
 
-`@vitest/ui`を追加し、`vitest --ui`を実行することで、テストの詳細情報がブラウザ上で確認できる。X にもポストしたがテスト対象の Module Graph が見れたりする。すごい。
+`@vitest/ui`を追加し、`vitest --ui`を実行することで、テストの詳細情報がブラウザ上で確認できる。X にもポストしたがテスト対象の Module Graph が見れたりもする。すごい。
 
 https://x.com/nus3_/status/1780096722041225522
 
-また Vitest の VSCode 拡張も開発が進んでおり、VSCode 上でテストの実行、デバッグ、監視ができるようになっている。
+また、Vitest の VSCode 拡張も開発が進んでおり、VSCode 上でテストの実行、デバッグ、監視ができるようになっている。
 https://marketplace.visualstudio.com/items?itemName=vitest.explorer
 
-### 実際に作業したプルリク
+### 該当プルリク
 
 https://github.com/nus3/react-test-examples/pull/13
 
-## あとがき
+## `@testing-library/react`: v13 → v15
 
-全体のコード量は多くはなかったが、それでも作業時間は合計すると半日ぐらいかかった気がする。日頃の(計画的な)アップデートは大事だなと改めて実感。
+[元の記事](https://blog.cybozu.io/entry/2022/08/29/110000)から`@testing-library/react`のバージョンが 13.3.0 から 15.0.2 に上がっていたので、次のような対応をした
 
-## jest/swc→vitest
+- `@testing-library/react`、`@testing-library/user-event`のバージョンアップ
+- `Warning: An update to SelectBox inside a test was not wrapped in act(...).`の対応
+- `vi.useFakeTimers`を使ってるテストが落ちる問題の対応
 
-https://github.com/nus3/react-test-examples/pull/11
+### `Warning: An update to SelectBox inside a test was not wrapped in act(...).`の対応
 
-- Vitest が 1.0 になったので Vitest を使おう
-- Vitest 1.0 requires Vite >=v5.0.0 and Node >=v18.0.0
-- jest から vitest への移行方法
-  - https://vitest.dev/guide/migration.html#migrating-from-jest
-- vite に掲載されてる react + ts のバージョンに買うライブラリを揃える
-  - https://stackblitz.com/edit/vitejs-vite-8tkjpr?file=package.json&terminal=dev
-  - tsconfig、tsconfig.node.json も揃える
-- vitest で msw, testing-library, react の example があったのでそれを参考にする
-  - https://stackblitz.com/edit/vitest-dev-vitest-yf7kxm?file=src%2Futils%2Ftest-utils.tsx&initialPath=__vitest__/
-  - testing-library/jest-dom を使う場合
-  - https://github.com/testing-library/jest-dom?tab=readme-ov-file#with-vitest
-- vitest が提供するメソッドをテストファイルで使うように
-- vitest、ui もいいし、VSCode 拡張も開発進んでていい感じよ
+`@testing-library/react`と`@testing-library/user-event`をそれぞれ最新バージョンにアップデートしたところ、テスト実行時に親の顔より見た次の Warning が大量に出力された。
 
-## msw -> v2 対応
-
-https://mswjs.io/docs/migrations/1.x-to-2.x/
-
-- rest を http に変更
-  - Response を返すように
-- setupServer の引数に handlers を渡すように変更
-
-## eslint, prettier → biome
-
-https://biomejs.dev/blog/biome-v1-7/
-
-- biome をインストールして、対象のパッケージで pnpm biome init
-
-```
-Files created
-
-  - biome.json
-    Your project configuration. See https://biomejs.dev/reference/configuration
-
-Next Steps
-
-  1. Setup an editor extension
-     Get live errors as you type and format when you save.
-     Learn more at https://biomejs.dev/guides/integrate-in-editor/
-
-  2. Try a command
-     biome check  checks formatting, import sorting, and lint rules.
-     biome --help displays the available commands.
-
-  3. Migrate from ESLint and Prettier
-     biome migrate eslint   migrates your ESLint configuration to Biome.
-     biome migrate prettier migrates your Prettier configuration to Biome.
-
-  4. Read the documentation
-     Find guides and documentation at https://biomejs.dev/guides/getting-started/
-
-  5. Get involved with the community
-     Ask questions and contribute on GitHub: https://github.com/biomejs/biome
-     Seek for help on Discord: https://discord.gg/BypW39g6Yc
-```
-
-- その後に`pnpm dlx @biomejs/biome migrate`を実行した
-- vscode 拡張をワークスペースに適用
-- koba さんが biome に移管したプルリク
-  - https://github.com/koba04/swr-devtools/pull/131/files
-
-```json
-		"fix": "biome check --apply .",
-		"fix:unsafe": "biome check --apply-unsafe .",
-		"lint": "biome lint .",
-```
-
-- biome が無視するファイル
-  - https://biomejs.dev/guides/how-biome-works/#protected-files
-- node_moduels もデフォルトで無視されてそうではある
-  - .gitignore を考慮してくれる
-  - The CLI now takes in consideration the .gitignore in the home directory of the user, if it exists.
-  - https://biomejs.dev/internals/changelog/#new-features-13
-- indent を tab から space に変更する
-
-## testing-library -> v15 対応
-
-- 対象のライブラリをアプデした
-- 1 つテストが落ちた
-- 大量のテストで以下の warning が出た
-
-```
+```shell
 Warning: An update to SelectBox inside a test was not wrapped in act(...).
 
 When testing, code that causes React state updates should be wrapped into act(...):
@@ -284,22 +252,13 @@ act(() => {
 /* assert on the output */
 
 This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
-    at SelectBox
 ```
 
-- 多分、v14 のリリースが影響してそう
-  - https://github.com/testing-library/react-testing-library/releases/tag/v14.0.0
-- 過去に v14 対応した時のプルリク
-  - https://github.dev.cybozu.co.jp/kintone/kintone/pull/32308
-- `await userEvent`してるのに warning が出るのは何故か
-  - https://qiita.com/naoki96/items/fd9ac220d158a4b33b14
-- @testing-library/dom のバージョンが揃ってないかららしい
+`@testing-library/react`と`@testing-library/user-event`がそれぞれ依存する`@testing-library/dom`のバージョンが揃ってないことでこの Warning が発生するという情報が[`@testing-library/user-event`の Discussions](https://github.com/testing-library/user-event/discussions/906#discussioncomment-2522468)にあったので、調べてみる。
 
 ```shell
 ❯ pnpm why @testing-library/dom
 Legend: production dependency, optional only, dev only
-
-react-vitest@0.0.0 /Users/nus3/dev/playground/react-test-examples/apps/react-vitest
 
 devDependencies:
 @storybook/testing-library 0.0.11
@@ -307,21 +266,19 @@ devDependencies:
 └─┬ @testing-library/user-event 13.5.0
   └── @testing-library/dom 8.13.0 peer
 @testing-library/react 15.0.2
-└── @testing-library/dom 10.0.0
+└── @testing-library/dom 10.0.0 # バージョンが揃ってへんやんけ
 @testing-library/user-event 14.5.2
-└── @testing-library/dom 8.13.0 peer
+└── @testing-library/dom 8.13.0 peer # バージョンが揃ってへんやんけ
 ```
 
-- @storybook/testing-library が依存してるから storybook の v8 対応も進める
-- storybook のバージョンアップ対応したら、warning は解消された
-  - @testing-library/react と@testing-library/user-event で@testing-library/dom のバージョンが揃ったから
+`@storybook/testing-library`の影響を受けて、`@testing-library/dom`のバージョンが揃っていなかった。後述する Storybook の v8 へのバージョンアップの過程で、`@storybook/testing-library`は`@storybook/test`に移行できる。この移行により`@testing-library/dom`のバージョンを揃えることができる。
+
+次の出力結果は Storybook の v8 へのバージョンアップ後のもので、`@testing-library/react`と`@testing-library/user-event`それぞれで`@testing-library/dom`のバージョンが揃っている。
 
 ```shell
 ❯ pnpm why @testing-library/dom
 Legend: production dependency, optional only, dev only
 
-react-vitest@0.0.0 /Users/nus3/dev/playground/react-test-examples/apps/react-vitest
-
 devDependencies:
 @storybook/addon-interactions 8.0.8
 └─┬ @storybook/test 8.0.8
@@ -333,75 +290,60 @@ devDependencies:
 └─┬ @testing-library/user-event 14.5.2
   └── @testing-library/dom 9.3.4 peer
 @testing-library/react 15.0.2
-└── @testing-library/dom 10.0.0
+└── @testing-library/dom 10.0.0 # キレイにバージョンが揃ってるわね
 @testing-library/user-event 14.5.2
-└── @testing-library/dom 10.0.0 peer
+└── @testing-library/dom 10.0.0 peer # キレイにバージョンが揃ってるわね
 ```
 
-- 全部直ると、useFakeTimers 使ってるところで落ちる
-  - `vi.useFakeTimers({ shouldAdvanceTime: true });`がいいらしい
-  - https://github.com/testing-library/react-testing-library/issues/1198#issuecomment-1489224361
-- https://vitest.dev/api/vi.html#vi-usefaketimers
-  - The implementation is based internally on @sinonjs/fake-timers.
-  - 実装は@sinonjs/fake-timers に基づいている
-    - https://github.com/sinonjs/fake-timers
-  - shouldAdvanceTime
-    - https://github.com/sinonjs/fake-timers?tab=readme-ov-file#api-reference
-    - 実システムのモック時間を自動的にインクリメントするように指示する
-- composeStories と play 関数は混ぜない方がいいかも
-  - 同じ warning が出る
+`@testing-library/dom`のバージョンが揃うことで、テスト実行時に Warning は発生しなくなる。
 
-```shell
-Warning: An update to Toast inside a test was not wrapped in act(...).
+### `vi.useFakeTimers`を使ってるテストが落ちる問題の対応
 
-When testing, code that causes React state updates should be wrapped into act(...):
+`vi.useFakeTimers`を使っているテストで、`vi.advanceTimersByTime`を使ってタイマーを進めようとしても、テスト実行時にはタイマーが進んでおらず、テストが落ちるというケースがあった。
 
-act(() => {
-  /* fire events that update state */
-});
-/* assert on the output */
-```
+[それっぽい Issue](https://github.com/testing-library/react-testing-library/issues/1198#issuecomment-1489224361)を読むと、`vi.useFakeTimers({ shouldAdvanceTime: true })`という引数を渡せるようになっている。[Vitest のドキュメント](https://vitest.dev/api/vi.html#vi-usefaketimers)を読むと、`vi.useFakeTimers`の内部では[`@sinonjs/fake-timers`](https://github.com/sinonjs/fake-timers)が使われているとのこと。
 
-- vitest 側と、storybook 側の@testing-library/dom のバージョンが違うことが原因に感じる
+この`@sinonjs/fake-timers`の[APIReference](https://github.com/sinonjs/fake-timers?tab=readme-ov-file#api-reference)を見ると、`shouldAdvanceTime`パラメーターの説明が次のように記載されていた。
 
-```shell
-❯ pnpm why @testing-library/dom
+> tells FakeTimers to increment mocked time automatically based on the real system time shift (e.g. the mocked time will be incremented by 20ms for every 20ms change in the real system time)
 
-devDependencies:
-@storybook/addon-interactions 8.0.8
-└─┬ @storybook/test 8.0.8
-  ├── @testing-library/dom 9.3.4
-  └─┬ @testing-library/user-event 14.5.2
-    └── @testing-library/dom 9.3.4 peer
-@storybook/test 8.0.8
-├── @testing-library/dom 9.3.4
-└─┬ @testing-library/user-event 14.5.2
-  └── @testing-library/dom 9.3.4 peer
-@testing-library/react 15.0.2
-└── @testing-library/dom 10.0.0
-@testing-library/user-event 14.5.2
-└── @testing-library/dom 10.0.0 peer
-```
+説明では`based on the real system time shift`で、今回のケースには当てはまらないような気もしたが、実際に`vi.useFakeTimers({ shouldAdvanceTime: true })`を指定してテストを実行すると、意図した挙動になった。
 
-- ということで play 関数のテストは storybook のテストランナーを使うことにしましょう
+### 該当プルリク
 
-## storybook
+https://github.com/nus3/react-test-examples/pull/15
 
-https://storybook.js.org/docs/migration-guide
+## Storybook: v6 → v8
 
-- `pnpm dlx storybook@latest upgrade`やってみた
+Storybook も testing-library と同様に、[元の記事](https://blog.cybozu.io/entry/2022/08/29/110000)からバージョンが 6.5.6 から 8.0.8 に上がっていたので、次のような対応をした
+
+- `pnpm dlx storybook@latest upgrade`
+- Story の型定義を変更
+- `@storybook/testing-react`の削除
+- `@storybook/addon-actions`を`@storybook/test`の`fn`に置き換える
+- `composeStories`による Story を使った Vitest のテストで play 関数を使わないように
+- `@storybook/test-runner`を追加
+
+### `pnpm dlx storybook@latest upgrade`
+
+今回のアップデート作業で一番驚いた部分。
+
+Storybook には自動で v8 にアップデートするためのコマンドが用意されており、このコマンドを実行することで関連するライブラリのアップデートや移行作業を CLI を通して自動で行なってくれる。
+https://storybook.js.org/docs/migration-guide#automatic-upgrade
+
+作業ごとにどういったことを Storybook がしてくれるのか懇切丁寧なメッセージを出力してくれる。出力結果を次のアコーディオンにまとめたので興味がある人はぜひ見てほしい。バージョンアップ作業によるユーザーの負担を減らすための Storybook の思いやりを感じるはずだ。
+
+:::details storyStore の削除
+
+[v7 から storyStore がデフォルトで使われている](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#storystorev7-enabled-by-default)ので、オプションで指定した場合は削除する。
 
 ```shell
 ❯ pnpm dlx storybook@latest upgrade
-Packages: +599
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Progress: resolved 621, reused 457, downloaded 142, added 599, done
 ╭───────────────────────────────────────────────────────────────╮
 │                                                               │
 │   Upgrading Storybook from version 6.5.6 to version 8.0.8..   │
 │                                                               │
 ╰───────────────────────────────────────────────────────────────╯
-info Checking for upgrade blockers...
 ╭──────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                                          │
 │   Storybook has found potential blockers in your project that need to be resolved before upgrading:      │
@@ -427,23 +369,11 @@ info Checking for upgrade blockers...
 │   Fix the above issues and try running the upgrade command again.                                        │
 │                                                                                                          │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-
-attention => Storybook now collects completely anonymous telemetry regarding usage.
-This information is used to shape Storybook's roadmap and prioritize features.
-You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
-https://storybook.js.org/telemetry
 ```
 
-- `storyStoreV7`を消せと
-- 以下のコードを削除
+:::
 
-```ts
-	features: {
-		storyStoreV7: true,
-	},
-```
-
-- もう一回`pnpm dlx storybook@latest upgrade`を実行
+:::details 関連するライブラリのバージョンアップ
 
 ```shell
 devDependencies:
@@ -461,9 +391,11 @@ devDependencies:
 + @storybook/react 8.0.8
 ```
 
-```shell
-🔎 checking possible migrations..
+:::
 
+:::details @storybook/react-vite への移行
+
+```shell
 🔎 found a 'new-frameworks' migration:
 ╭ Automigration detected ──────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                                          │
@@ -498,6 +430,10 @@ devDependencies:
 ✅ ran new-frameworks migration
 ```
 
+:::
+
+:::details storybook-binary への移行
+
 ```shell
 🔎 found a 'storybook-binary' migration:
 ╭ Automigration detected ──────────────────────────────────────────────────────────────────────────────────╮
@@ -516,6 +452,10 @@ devDependencies:
 
 ✅ ran storybook-binary migration
 ```
+
+:::
+
+:::details storybook のコマンド変更
 
 ```shell
  found a 'sb-scripts' migration:
@@ -550,6 +490,10 @@ devDependencies:
 ✅ ran sb-scripts migration
 ```
 
+:::
+
+:::details @storybook/testing-library の削除
+
 ```shell
 🔎 found a 'remove-jest-testing-library' migration:
 ╭ Automigration detected ──────────────────────────────────────────────────────────────────────────────────╮
@@ -567,6 +511,10 @@ devDependencies:
 ✔ Do you want to run the 'remove-jest-testing-library' migration on your project? … yes
 ✔ Please enter the glob for your stories to migrate to @storybook/test … ./src/**/*.stories.*
 ```
+
+:::
+
+:::details autodocs の有効化
 
 ```shell
 🔎 found a 'autodocsTrue' migration:
@@ -589,92 +537,170 @@ devDependencies:
 ✅ ran autodocsTrue migratio
 ```
 
-```shell
-🔎 found a 'upgradeStorybookRelatedDependencies' migration:
-╭ Automigration detected ──────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                          │
-│   You're upgrading to the latest version of Storybook. We recommend upgrading the following packages:    │
-│   - @storybook/testing-react: 1.3.0 => 2.0.1                                                             │
-│                                                                                                          │
-│   After upgrading, we will run the dedupe command, which could possibly have effects on dependencies     │
-│   that are not Storybook related.                                                                        │
-│   see: https://docs.npmjs.com/cli/commands/npm-dedupe                                                    │
-│                                                                                                          │
-│   Do you want to proceed (upgrade the detected packages)?                                                │
-│                                                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-✔ Do you want to run the 'upgradeStorybookRelatedDependencies' migration on your project? … yes
-Installing dependencies...
+:::
 
-Scope: all 2 workspace projects
- WARN  deprecated @storybook/testing-react@2.0.1: In Storybook 7, this package has been promoted to a first-class Storybook functionality. This means that you no longer need it! Instead, you can import the same utilities, but from the @storybook/react package. Please migrate when you can.
-../..                                    |   +6  -29 +---
-../..                                    | Progress: resolved 958, reused 896, downloaded 6, added 6, done
+### Story の型定義を変更
+
+次のように[`satisfies`](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator)を使って Story の定義をするように変更。
+
+```ts
+import type { Meta, StoryObj } from "@storybook/react";
+
+import { Button, ButtonProps } from "./Button";
+
+const meta = {
+  component: Button,
+} satisfies Meta<typeof Button>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Primary: Story = {
+  args: {
+    primary: true,
+    label: "Button",
+  },
+};
+```
+
+https://storybook.js.org/docs/writing-stories/args#story-args
+
+### `@storybook/testing-react`の削除
+
+Storybook で定義した Story がテストでも使える`composeStories`は`@storybook/react`で提供されるようになったので、`@storybook/testing-react`は削除。
+
+https://github.com/storybookjs/testing-react?tab=readme-ov-file#%EF%B8%8F-attention
+
+### `@storybook/addon-actions`を`@storybook/test`の`fn`に置き換える
+
+以前は`@storybook/addon-actions`を使って、`onClick`などのイベントを Storybook 上で確認できるようにしていたが、同様のことが`@storybook/test`の`fn`でできるようになった。
+
+https://storybook.js.org/docs/essentials/actions#via-storybooktest-fn-spy-function
+
+```diff ts
+- import { action } from "@storybook/addon-actions";
++ mport { fn } from "@storybook/test";
+
+export const Default: Story = {
+	args: {
+		children: "label",
+-		onClick: action("onClick"),
++		onClick: fn(),
+	},
+};
+```
+
+### `composeStories`による Story を使った Vitest のテストで play 関数を使わないように
+
+次のテストのように、`composeStories`から Story を取得しつつ、Vitest 側で play 関数を実行すると、`Warning: An update to SelectBox inside a test was not wrapped in act(...).`問題が再発する。
+
+```ts
+import { composeStories } from "@storybook/react";
+import * as ToastStories from "./Toast.stories";
+
+const { Default } = composeStories(ToastStories);
+
+test("should be show and hide toast in story", async () => {
+  const { container } = render(<Default />);
+  await Default.play({ canvasElement: container });
+  expect(screen.getByRole("alert")).toBeInTheDocument();
+});
+```
+
+これは`@storybook/test`と`@testing-library/react`で依存する`@testing-library/dom`のバージョンが揃っていないのが原因。
+
+```shell
+❯ pnpm why @testing-library/dom
+Legend: production dependency, optional only, dev only
 
 devDependencies:
-- @storybook/testing-react 1.3.0
-+ @storybook/testing-react 2.0.1 deprecated
-
- WARN  Issues with peer dependencies found
-apps/react-vitest
-└─┬ @storybook/testing-react 2.0.1
-  └── ✕ unmet peer @storybook/react@"^7.0.0-beta.0 || ^7.0.0-rc.0 || ^7.0.0": found 8.0.8
-
-Done in 1.9s
-
-We upgraded 1 packages:
-- @storybook/testing-react: 1.3.0 => 2.0.1
-
-✅ ran upgradeStorybookRelatedDependencies migration
+@storybook/addon-interactions 8.0.8
+└─┬ @storybook/test 8.0.8
+  ├── @testing-library/dom 9.3.4
+  └─┬ @testing-library/user-event 14.5.2
+    └── @testing-library/dom 9.3.4 peer
+@storybook/test 8.0.8
+├── @testing-library/dom 9.3.4
+└─┬ @testing-library/user-event 14.5.2
+  └── @testing-library/dom 9.3.4 peer # testing-library/reactとバージョンが揃ってへんやんけ!
+@testing-library/react 15.0.2
+└── @testing-library/dom 10.0.0
+@testing-library/user-event 14.5.2
+└── @testing-library/dom 10.0.0 peer
 ```
 
-```shell
-╭ Migration check ran successfully ────────────────────────────────────────────────────────────────────────╮
-│                                                                                                          │
-│   Successful migrations:                                                                                 │
-│                                                                                                          │
-│   new-frameworks, storybook-binary, sb-scripts, remove-jest-testing-library, autodocsTrue,               │
-│   wrap-require, upgradeStorybookRelatedDependencies                                                      │
-│                                                                                                          │
-│   Skipped migrations:                                                                                    │
-│                                                                                                          │
-│   visual-tests-addon                                                                                     │
-│                                                                                                          │
-│   ─────────────────────────────────────────────────                                                      │
-│                                                                                                          │
-│   If you'd like to run the migrations again, you can do so by running 'npx storybook automigrate'        │
-│                                                                                                          │
-│   The automigrations try to migrate common patterns in your project, but might not contain everything    │
-│   needed to migrate to the latest version of Storybook.                                                  │
-│                                                                                                          │
-│   Please check the changelog and migration guide for manual migrations and more information:             │
-│   https://storybook.js.org/docs/8.0/migration-guide                                                      │
-│   And reach out on Discord if you need help: https://discord.gg/storybook                                │
-│                                                                                                          │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+`@storybook/test`と`@testing-library/react`の依存関係のアップデートは必ずしも同時に行われるわけではないだろうし、play 関数を含めたテストがしたい場合はテストランナーを分ける(`@storybook/test-runner`を使う)方が運用は安定しそう。
+
+なので、今回は`composeStories`を使ってテストでは play 関数を実行しないようにし、`@storybook/test-runner`で play 関数のテストを実行できるようにした。
+
+### その他
+
+- `@storybook/test`の`useEvent`は Promise を返してくれる
+- [v7 から`main.ts`は ESM 形式で定義できるようになった](https://github.com/storybookjs/storybook/blob/next/MIGRATION.md#esm-format-in-mainjs)
+- [モノレポ構成の場合は Storybook 実行時にモジュール解決に問題が出るかもしれないので、`getAbsolutePath`で addon などを追加している](https://storybook.js.org/docs/faq#how-do-i-fix-module-resolution-in-special-environments)
+- `@storybook/test-runner`のセットアップで`pnpm dlx playwright install`
+- [`@storybook/test-runner`のデフォルトポートは 6006](`@storybook/test-runner`)
+
+### 該当コミット
+
+https://github.com/nus3/react-test-examples/pull/15/files/b232a187065e85b952554f2ba85aa22130890f72..b18c7d649cb143510ff17da4e9ba50da5f792845
+
+## MSW: v0 → v2
+
+MSW は[元の記事](https://blog.cybozu.io/entry/2022/08/29/110000)からバージョンが 0.44.2 から 2.2.13 に上がっていたので、[マイグレーションガイド](https://mswjs.io/docs/migrations/1.x-to-2.x/)を参考に、`rest`を`http`に変更した。
+
+```diff ts
+- import { rest } from 'msw';
++ import { http, HttpResponse } from 'msw';
+import { setupServer } from 'msw/node';
+
++ const mockHandlers = [
++   http.get('/examples', () => {
++     return HttpResponse.json(
++       {
++         examples: [
++           { id: '1', name: 'nus1' },
++           { id: '2', name: 'nus2' },
++           { id: '3', name: 'nus3' }
++         ]
++       },
++       { status: 200 }
++     );
++   })
++ ];
++ const server = setupServer(...mockHandlers);
+
+describe('/examples', () => {
+-  const server = setupServer();
+-  beforeEach(() => {
+-    server.use(
+-      rest.get('/examples', async (_req, res, ctx) => {
+-        return res(
+-          ctx.status(200),
+-          ctx.json<GetExamplesResponse>({
+-            examples: [
+-              { id: '1', name: 'nus1' },
+-              { id: '2', name: 'nus2' },
+-              { id: '3', name: 'nus3' }
+-            ]
+-          })
+-        );
+-      })
+-    );
+-  });
+})
 ```
 
-- バージョンが固定化されてなかったのと、dependencies に`@storybook/test`が入ってたのでそれを移動
-- Storybook は esm 対応してるっぽいので main.ts を esm で書けるようにする
-  - https://github.com/storybookjs/storybook/issues/9854#issuecomment-1534669700
-- main.ts で getAbsolutePath を使う理由
-  - https://storybook.js.org/docs/faq#how-do-i-fix-module-resolution-in-special-environments
-  - monorepo 構成の場合に必要そう
-- @storybook/testing-react は@storybook/react から利用できるようになったのでいらない
-  - https://github.com/storybookjs/testing-react?tab=readme-ov-file#%EF%B8%8F-attention
-- composeStories からのテストコードでの play 関数の実行はこれで対応する
-  - https://github.com/storybookjs/storybook/issues/21969#issuecomment-1638924687
-- @storybook/addon-actions の対応
-  - `@storybook/test`の fn でモックすれば良き
-    - https://storybook.js.org/docs/essentials/actions#via-storybooktest-fn-spy-function
-  - めんどくさい場合は一括で指定できる
-    - https://storybook.js.org/docs/essentials/actions#automatically-matching-args
-    - が play 関数との兼ね合いで推奨はしてないって
-- Storybook の型指定を satisfies のやつに変えたよ
-- @storybook/test の userEvent が promise 返すようになってた
+MSW では v2 のアップデートで`http`をつかった際にレスポンスには標準の`Response`を使えるようになったが、今回はレスポンスを定義する上で便利なメソッドが提供されていて、利用が推奨されている`HttpResponse`で定義した。
 
-### Storybook のテストランナー
+https://mswjs.io/docs/basics/mocking-responses#using-httpresponse-class
 
-- @storybook/test-runner を追加
-- デフォルトポートが 6006 なので storybook 側もそれに合わせる
-- `pnpm dlx playwright install`を使ってブラウザをインストール
+### 該当コミット
+
+https://github.com/nus3/react-test-examples/pull/13/commits/245b1bdd867f12be58295c2b3d7adca19cc2a59f
+
+## あとがき
+
+全体のコード量は多くなかったのに、それでも作業時間は合計すると半日ぐらいかかった。実際に運用しているプロダクトであればもっと時間がかかったんだろうな。
+
+リポジトリの内容をがっつり変えてしまったので、[元の記事](https://blog.cybozu.io/entry/2022/08/29/110000)で参照している部分が軒並みリンク切れになってしまった。直すます。
