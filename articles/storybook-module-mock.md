@@ -3,7 +3,7 @@ title: "Storybook8.1からSubpath importsを使ったモジュールのモック
 emoji: "📓"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["storybook"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
