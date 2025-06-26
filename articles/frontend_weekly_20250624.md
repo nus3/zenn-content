@@ -1,5 +1,5 @@
 ---
-title: "Baseline2024のふりかえりなど: Cybozu Frontend Weekly (2025-06-24号)"
+title: "Vitest3.2のリリースなど: Cybozu Frontend Weekly (2025-06-24号)"
 emoji: "🐸"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["CybozuFrontendWeekly", "frontend"]
