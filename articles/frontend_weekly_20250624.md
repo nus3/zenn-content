@@ -15,7 +15,7 @@ publication_name: "cybozu_frontend"
 
 今回は、2025/06/24 の Frontend Weekly で取り上げた記事や話題を紹介します。
 
-##　 Roo Code 3.21.4 Release Notes
+## Roo Code 3.21.4 Release Notes
 
 https://docs.roocode.com/update-notes/v3.21.4
 
@@ -143,3 +143,17 @@ https://webaim.org/blog/up-and-coming-aria/
 https://www.gwhitworth.com/posts/2025/styleable-select-is-here/
 
 - stylable な select 要素の実現が近いことを OpenUI の chair で[Customizable Select Element](https://open-ui.org/components/customizableselect/)を提案した Greg Whitworth 氏が紹介
+
+## Ready for Developer Testing: CSS Gap Decorations
+
+https://groups.google.com/a/chromium.org/g/blink-dev/c/vmO3X2aYL2Y/m/f9LLE_W8AAAJ
+
+- Grid や Flexbox といった CSS で Gap を柔軟に装飾できる[CSS Gap Decorations Module Level 1](https://www.w3.org/TR/css-gaps-1/) という仕様が実装され、Developer Testing の段階に
+- 下記リンクでデモが公開されている
+  - https://microsoftedge.github.io/Demos/css-gap-decorations/playground.html
+
+## Intent to Prototype: CSS border-shape
+
+https://groups.google.com/a/chromium.org/g/blink-dev/c/FAgQ2UkHJSs/m/Q3Lc1fBYAAAJ
+
+- shape() などで任意の形状を持つ長方形以外の境界線を作成できる border-shape のプロトタイプ実装が進められている
