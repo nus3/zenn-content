@@ -3,7 +3,7 @@ title: "Vitest3.2のリリースなど: Cybozu Frontend Weekly (2025-06-24号)"
 emoji: "🐸"
 type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["CybozuFrontendWeekly", "frontend"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
@@ -40,7 +40,7 @@ https://www.mozilla.org/en-US/firefox/142.0a1/releasenotes/#note-790833
 
 https://groups.google.com/a/mozilla.org/g/dev-platform/c/G0GDGqJCGpM
 
-- iframe から top level のページ遷移を制限する実装のプロトタイプが Gecko で進められいる
+- iframe から top level のページ遷移を制限する実装のプロトタイプが Gecko で進められている
 
 ## Announcing Vitest 3.2
 
