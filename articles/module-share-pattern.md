@@ -108,10 +108,60 @@ packages:
 
 ### 共通のロジックやコンポーネントを直接扱う
 
+特定のディレクトリにあるモジュールを各チームが直接参照する方式です。
+
+例えば、次のようなディレクトリ構成で shared ディレクトリに各チームが参照する共通モジュールを配置する場合、
+
+```
+├── shared/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── src/
+│       ├── components/
+│       │   └── Button.tsx
+│       └── functions/
+└── team-a/
+    ├── package.json
+    ├── vite.config.ts
+    └── tsconfig.json
+```
+
+Vite の[`resolve.alias`](https://ja.vite.dev/config/shared-options.html#resolve-alias)オプションを利用してエイリアスを設定し、
+
+```ts: team-a/vite.config.ts
+import { defineConfig } from 'vite';
+import { fileURLToPath, URL } from 'node:url';
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      // sharedディレクトリのaliasを設定
+      '@shared': fileURLToPath(new URL('../shared-modules', import.meta.url)),
+    },
+  },
+});
+```
+
+各チームは shared ディレクトリで定義されたモジュールを直接インポートします。
+
+```ts: team-a/src/index.ts
+import { formatDate } from '@shared/functions';
+```
+
+この方式では、利用チーム側では共通モジュールを npm パッケージとして扱わない点が、Monorepo 構成と異なる点です。
+
+Monorepo 構成でなくても、この方式を利用できるのは良い点かもしれませんが、運用していく中で npm パッケージとして公開したくなった場合に、Monorepo 構成でのローカル npm パッケージと比べて、npm パッケージ化するための作業コストが高くなる点は注意が必要です。
+
+また、個人的な感想にはなりますが、各チームが共有で利用するモジュールなのであれば、npm の仕組みに則り、npm パッケージの形で提供される方が中長期の運用を考えると良いように感じており、あまり、この方式は採用したくはないな〜と思ったりもします。
+
 ### マイクロフロントエンドを採用する
 
 ## まとめ
 
+そもそも 1 プロダクトなのか、複数プロダクトなのか、またチームはどれくらいあるのかなどの前提条件によって取りうる選択肢は変わってくるとは思いますが、今回の kintone のフロントエンド刷新後の構成のように 1 プロダクトに 5~10 チームぐらいチーム数がある場合には、hogehoge です。
+
 <!-- TODO: 文章化する -->
 
 - pnpm を使った 1 つの Monorepo 構成は導入を検討してみても良さそう
+
+正直、kintone のフロントエンド刷新後の構成で領域・チームを跨いだモジュールの共有をどうするかはまだ答えが出ていません。方針が決まり、運用したらその過程やうまくいったかどうかを、 Cybozu InsideOut にでも書きたいなと思ってます（宣言駆動）。
