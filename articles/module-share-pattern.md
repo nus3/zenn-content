@@ -1,6 +1,6 @@
 ---
 title: "フロントエンドのモジュールを共有する手法を考える"
-emoji: "📑"
+emoji: "🔗"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["frontend"]
 published: false
