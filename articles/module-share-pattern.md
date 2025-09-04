@@ -3,7 +3,7 @@ title: "フロントエンドのモジュールを共有する手法を考える
 emoji: "🔗"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["frontend"]
-published: false
+published: true
 publication_name: "cybozu_frontend"
 ---
 
